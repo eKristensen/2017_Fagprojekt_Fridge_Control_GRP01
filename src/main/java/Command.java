@@ -1,16 +1,13 @@
 import com.google.gson.annotations.SerializedName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Command {
-    private transient final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private String command;
     private String gateway;
-    private String unit;
+    private String device;
     private String correlation;
 
     @SerializedName("params")
@@ -21,21 +18,12 @@ public class Command {
         parameters = new HashMap<String, String>();
     }
 
-    public Command(String command) {
+    public Command(String command, String gateway, String device) {
         this();
         this.command = command;
-    }
-
-    public Command(String command, String gateway, String unit) {
-        this(command);
         this.gateway = gateway;
-        this.unit = unit;
+        this.device = device;
     }
-
-    public void addItem(String key, String value) {
-        parameters.put(key, value);
-    }
-
 
 
     public String getCommand() {
@@ -54,6 +42,14 @@ public class Command {
         this.parameters = parameters;
     }
 
+    public boolean hasParameters() {
+        return parameters.size() > 0;
+    }
+
+    public void addParameter(String key, String value) {
+        parameters.put(key, value);
+    }
+
     public String getGateway() {
         return gateway;
     }
@@ -62,12 +58,12 @@ public class Command {
         this.gateway = gateway;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getDevice() {
+        return device;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setDevice(String device) {
+        this.device = device;
     }
 
     public String getCorrelation() {
@@ -76,5 +72,22 @@ public class Command {
 
     public void setCorrelation(String correlation) {
         this.correlation = correlation;
+    }
+
+    public boolean isValid() {
+        if (command == null || gateway == null || device == null) return false;
+        // slow regex check, can be optimized with a compiled pattern
+        if (!gateway.matches("[0-9A-F]{16}")) return false;
+        if (!device.matches("[0-9A-F]{16}")) return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (String key : parameters.keySet()) {
+            sb.append(key + ":" + parameters.get(key) + " ");
+        }
+        return "Command: " + command + ", Gateway: " + gateway + ", Device: " + device + ", Parameters: " + sb.toString();
     }
 }

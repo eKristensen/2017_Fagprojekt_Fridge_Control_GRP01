@@ -3,6 +3,8 @@ import com.rabbitmq.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
+
 public class App {
     private static final Logger log = LoggerFactory.getLogger(App.class);
     private static Gson gson;
@@ -40,8 +42,13 @@ public class App {
         Consumer dataConsumer = new Listener(dataChannel);
         Consumer statusConsumer = new Listener(statusChannel);
         // start listening to data and status
-        dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line out to receive less noise in output while testing commands
+        //dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line to receive less noise in output while testing commands
         statusChannel.basicConsume(statusQueue, true, statusConsumer);
+
+
+        // Initialize database
+        // don't use this unless needed to, it won't help just blindly initializing the database, it will probably just mess stuff up
+//        new InitializeDatabase(controlChannel);
 
 
         // TESTS
@@ -70,10 +77,31 @@ public class App {
 
 
         // Test API
-        testAddUnit(controlChannel, gateway, relay, sensor, indicator);
-        testAddUnit(controlChannel, gateway, relay, sensor, indicator); // try adding it again to force a failure (watch the output from 'status')
-        testDeleteUnit(controlChannel, gateway);
-
+//        testAddUnit(controlChannel, gateway, relay, sensor, indicator); // add unit
+//        Thread.sleep(2000);
+//        testAddUnit(controlChannel, gateway, relay, sensor, indicator); // try adding it again to force a failure (watch the output from 'status')
+//        Thread.sleep(2000);
+//        testAddUnit(controlChannel, "0015BC0000000111", relay, sensor, indicator); // try adding new unit with a device that exists in other unit already
+//        Thread.sleep(2000);
+//        testAddUnit(controlChannel, "0015BC0000000222", "4YRH37FYRTUEJDYE", sensor, indicator); // try adding new unit with device with invalid addresses
+//        Thread.sleep(2000);
+//        testAddUnit(controlChannel, "0015BC000000XY", relay, sensor, indicator); // try adding new unit invalid gateway
+//        Thread.sleep(2000);
+//        testDeleteUnit(controlChannel, gateway); // delete unit
+//        Thread.sleep(2000);
+//        testDeleteUnit(controlChannel, gateway); // try deleting it again
+//        Thread.sleep(2000);
+//        testUpdateUnit(controlChannel, gateway, relay, sensor, indicator); // try updating a non-existing unit
+//        Thread.sleep(2000);
+//        testAddUnit(controlChannel, gateway, relay, sensor, indicator); // re-add unit
+//        Thread.sleep(2000);
+//        testUpdateUnit(controlChannel, gateway, relay, sensor, indicator); // update unit
+//        Thread.sleep(2000);
+//        testGetList(controlChannel, ApiCommand.EMPTY); // get at list of units registered
+//        Thread.sleep(2000);
+//        testGetList(controlChannel, gateway); // get a list of devices registered to a unit
+//        Thread.sleep(2000);
+//        testDeleteUnit(controlChannel, gateway); // clean up
 
 
         while (true);
@@ -86,7 +114,9 @@ public class App {
 
     private static void testGreenLed(Channel channel, String gateway, String indicator) throws Exception {
         Command cmd = new Command("led", gateway, indicator);
-        cmd.addItem("green", "on");
+        cmd.addParameter("green", "on");
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
@@ -94,7 +124,9 @@ public class App {
 
     private static void testRedLed(Channel channel, String gateway, String indicator) throws Exception {
         Command cmd = new Command("led", gateway, indicator);
-        cmd.addItem("red", "on");
+        cmd.addParameter("red", "on");
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
@@ -102,7 +134,9 @@ public class App {
 
     private static void testTurnOffLeds(Channel channel, String gateway, String indicator) throws Exception {
         Command cmd = new Command("led", gateway, indicator);
-        cmd.addItem("leds", "off");
+        cmd.addParameter("leds", "off");
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
@@ -110,9 +144,11 @@ public class App {
 
     private static void testTurnOffLedsDelayed(Channel channel, String gateway, String indicator, int delay) throws Exception {
         Command cmd = new Command("led", gateway, indicator);
-        cmd.addItem("red", "on");
+        cmd.addParameter("red", "on");
         //cmd.addItem("green", "on"); // seems only one led can be active at a time...
-        cmd.addItem("delay", ""+delay);
+        cmd.addParameter("delay", ""+delay);
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
@@ -120,7 +156,9 @@ public class App {
 
     private static void testSwitchRelay(Channel channel, String gateway, String relay, boolean state) throws Exception {
         Command cmd = new Command("relay", gateway, relay);
-        cmd.addItem("relay", Boolean.toString(state));
+        cmd.addParameter("relay", Boolean.toString(state));
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
@@ -131,19 +169,55 @@ public class App {
 
 
     private static void testAddUnit(Channel channel, String gateway, String relay, String sensor, String indicator) throws Exception {
-        Command cmd = new Command("add", gateway, null);
-        cmd.addItem("relay", relay);
-        cmd.addItem("sensor", sensor);
-        cmd.addItem("indicator", indicator);
-        cmd.setCorrelation("relid-1");
+        ApiCommand cmd = new ApiCommand("add", gateway);
+        cmd.addDevice("relay", relay);
+        cmd.addDevice("sensor", sensor);
+        cmd.addDevice("indicator", indicator);
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
     }
 
     private static void testDeleteUnit(Channel channel, String gateway) throws Exception {
-        Command cmd = new Command("delete", gateway, null);
-        cmd.setCorrelation("relid-2");
+        ApiCommand cmd = new ApiCommand("delete", gateway, null);
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
+
+        String json = gson.toJson(cmd);
+        channel.basicPublish("control", "", null, json.getBytes());
+    }
+
+    private static void testUpdateUnit(Channel channel, String gateway, String relay, String sensor, String indicator) throws Exception {
+        ApiCommand cmd = new ApiCommand("update", gateway);
+        cmd.addDevice("relay", "0015BC0000000AA1");
+        cmd.addDevice("sensor", "0015BC0000000AA2");
+        cmd.addDevice("indicator", "0015BC0000000AA3");
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
+
+        String json = gson.toJson(cmd);
+        channel.basicPublish("control", "", null, json.getBytes());
+    }
+
+    private static void testGetList(Channel channel, String gateway) throws Exception {
+        ApiCommand cmd = new ApiCommand("list", gateway, null);
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
+
+        String json = gson.toJson(cmd);
+        channel.basicPublish("control", "", null, json.getBytes());
+    }
+
+    private static void testAddUnitWithRules(Channel channel, String gateway, String relay, String sensor, String indicator, boolean read, boolean write, boolean config) throws Exception {
+        ApiCommand cmd = new ApiCommand("add", gateway);
+        cmd.setRules(new ApiCommand.Rules(read, write, config));
+        cmd.addDevice("relay", relay);
+        cmd.addDevice("sensor", sensor);
+        cmd.addDevice("indicator", indicator);
+        String correlation = UUID.randomUUID().toString();
+        cmd.setCorrelation(correlation);
 
         String json = gson.toJson(cmd);
         channel.basicPublish("control", "", null, json.getBytes());
