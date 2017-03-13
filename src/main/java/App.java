@@ -42,7 +42,7 @@ public class App {
         Consumer dataConsumer = new Listener(dataChannel);
         Consumer statusConsumer = new Listener(statusChannel);
         // start listening to data and status
-        //dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line to receive less noise in output while testing commands
+        dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line to receive less noise in output while testing commands
         statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
 
@@ -53,27 +53,59 @@ public class App {
 
         // TESTS
         // Configure a set of devices
-        String gateway   = "0015BC000000000A";
-        String relay     = "0015BC000000000B";
-        String sensor    = "0015BC000000000C";
-        String indicator = "0015BC000000000D";
-
+        String owesome_gateway   = "0015BC001C0011A7";
+        //testDeleteUnit(controlChannel, owesome_gateway);
+        
+        //Øl køleska
+        String ol_relay     = "0015BC001D0200A5";
+        String ol_sensor    = "0015BC001A001AED";
+        String ol_indicator = "0015BC0028000100";
+        
+        // right fridge
+        String rf_relay     = "0015BC001D02238F";
+        String rf_sensor    = "0015BC001A005565";
+        String rf_indicator = "0015BC0028000034";
+        
+        // left fridge
+        String lf_relay     = "0015BC001D0201C1";
+        String lf_sensor    = "0015BC001A001A42";
+        String lf_indicator = "0015BC00280001D8";
+        
+        // Old gateways
+        //String old1_gateway = "0015BC001C00119D";
+        //String old2_gateway = "0015BC001C00078D";
+        //testDeleteUnit(controlChannel, old1_gateway);
+        /*
+        testDeleteUnit(controlChannel, rf_relay);
+        testDeleteUnit(controlChannel, rf_sensor);
+        testDeleteUnit(controlChannel, rf_indicator);
+        testDeleteUnit(controlChannel, lf_relay);
+        testDeleteUnit(controlChannel, lf_sensor);
+        testDeleteUnit(controlChannel, lf_indicator);
+        */
+        
+        //new InitGRP01(controlChannel);
+        
+//        testAddUnit(controlChannel, owesome_gateway, ol_relay, ol_sensor, ol_indicator);
+//        testUpdateUnit(controlChannel, owesome_gateway, ol_relay, ol_sensor, ol_indicator, rf_relay, rf_sensor, rf_indicator, lf_relay, lf_sensor, lf_indicator);
+//        testUpdateUnit(controlChannel, owesome_gateway, lf_relay, lf_sensor, lf_indicator);
+//        testGetList(controlChannel, owesome_gateway); 
 
         // Test LED
-        testGreenLed(controlChannel, gateway, indicator);
-        Thread.sleep(5000);
-        testRedLed(controlChannel, gateway, indicator);
-        Thread.sleep(5000);
-        testTurnOffLeds(controlChannel, gateway, indicator);
-        Thread.sleep(5000);
-        testTurnOffLedsDelayed(controlChannel, gateway, indicator, 5000);
-        Thread.sleep(10000);
+        //testGreenLed(controlChannel, gateway, indicator);
+        //Thread.sleep(5000);
+        //testRedLed(controlChannel, gateway, indicator);
+        //Thread.sleep(5000);
+        //testTurnOffLeds(controlChannel, gateway, indicator);
+        //Thread.sleep(5000);
+        //testTurnOffLedsDelayed(controlChannel, gateway, indicator, 5000);
+        //Thread.sleep(10000);
 
 
         // Test RELAY
-        testSwitchRelay(controlChannel, gateway, relay, false);
-        Thread.sleep(5000);
-        testSwitchRelay(controlChannel, gateway, relay, true);
+        //testSwitchRelay(controlChannel, gateway, relay, false);
+        //Thread.sleep(5000);
+        //testSwitchRelay(controlChannel, gateway, relay, true);
 
 
         // Test API
