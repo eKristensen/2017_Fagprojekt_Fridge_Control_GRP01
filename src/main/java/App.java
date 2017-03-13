@@ -56,40 +56,8 @@ public class App {
         String owesome_gateway   = "0015BC001C0011A7";
         //testDeleteUnit(controlChannel, owesome_gateway);
         
-        //Øl køleska
-        String ol_relay     = "0015BC001D0200A5";
-        String ol_sensor    = "0015BC001A001AED";
-        String ol_indicator = "0015BC0028000100";
-        
-        // right fridge
-        String rf_relay     = "0015BC001D02238F";
-        String rf_sensor    = "0015BC001A005565";
-        String rf_indicator = "0015BC0028000034";
-        
-        // left fridge
-        String lf_relay     = "0015BC001D0201C1";
-        String lf_sensor    = "0015BC001A001A42";
-        String lf_indicator = "0015BC00280001D8";
-        
-        // Old gateways
-        //String old1_gateway = "0015BC001C00119D";
-        //String old2_gateway = "0015BC001C00078D";
-        //testDeleteUnit(controlChannel, old1_gateway);
-        /*
-        testDeleteUnit(controlChannel, rf_relay);
-        testDeleteUnit(controlChannel, rf_sensor);
-        testDeleteUnit(controlChannel, rf_indicator);
-        testDeleteUnit(controlChannel, lf_relay);
-        testDeleteUnit(controlChannel, lf_sensor);
-        testDeleteUnit(controlChannel, lf_indicator);
-        */
-        
         //new InitGRP01(controlChannel);
-        
-//        testAddUnit(controlChannel, owesome_gateway, ol_relay, ol_sensor, ol_indicator);
-//        testUpdateUnit(controlChannel, owesome_gateway, ol_relay, ol_sensor, ol_indicator, rf_relay, rf_sensor, rf_indicator, lf_relay, lf_sensor, lf_indicator);
-//        testUpdateUnit(controlChannel, owesome_gateway, lf_relay, lf_sensor, lf_indicator);
-//        testGetList(controlChannel, owesome_gateway); 
+        testGetList(controlChannel, owesome_gateway); 
 
         // Test LED
         //testGreenLed(controlChannel, gateway, indicator);

@@ -22,11 +22,17 @@ public class InitGRP01 {
         cmd.addDevice("relay", "0015BC001D02238F");
         cmd.addDevice("relay", "0015BC001D0200A5");
         cmd.addDevice("sensor", "0015BC001A001AED");
-        cmd.addDevice("sensor", "0015BC001A005565");
+        cmd.addDevice("sensor", "0015BC001A0056FC");
         cmd.addDevice("sensor", "0015BC001A001A42");
         cmd.addDevice("indicator", "0015BC0028000100");
         cmd.addDevice("indicator", "0015BC00280001D8");
         cmd.addDevice("indicator", "0015BC0028000034");
+        sendCommand(cmd);
+
+        cmd = new ApiCommand("add", "0015BC001C00119D");
+        cmd.addDevice("relay", "0015BC001D02567C");
+        cmd.addDevice("sensor", "0015BC001A005664");
+        cmd.addDevice("indicator", "0015BC0028000038");
         sendCommand(cmd);
     }
 
