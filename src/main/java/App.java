@@ -3,6 +3,7 @@ import com.rabbitmq.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.DriverManager;
 import java.util.UUID;
 
 public class App {
@@ -45,6 +46,8 @@ public class App {
         dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line to receive less noise in output while testing commands
         statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
+        
+        
 
         // Initialize database
         // don't use this unless needed to, it won't help just blindly initializing the database, it will probably just mess stuff up
