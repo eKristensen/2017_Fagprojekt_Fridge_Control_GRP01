@@ -25,17 +25,19 @@ public class Listener extends DefaultConsumer {
         JSONParser parser = new JSONParser();
         
 		try {
-			//JSONObject jsonObject = new JSONObject(message);
-		    //JSONObject newJSON = jsonObject.getJSONObject("stat");
-		    //System.out.println(newJSON);
-		    
 		    Object obj = parser.parse(message);
 
             JSONObject jsonObject = (JSONObject) obj;
             System.out.println(jsonObject);
             
-            String name = (String) jsonObject.get("topic");
+            String name = (String) jsonObject.get("topic"); 
             System.out.println(name);
+
+            JSONObject state = (JSONObject)jsonObject.get("state");
+            System.out.println(state.get("signal"));
+            
+            
+            
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
