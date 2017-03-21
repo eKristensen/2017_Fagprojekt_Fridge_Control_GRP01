@@ -1,18 +1,18 @@
+import java.sql.SQLException;
 
-
-public class AlgoritmeTest1 {
+public class AlgoritmeTest1  {
 	 
-	public static void main(String[] args) {
-		Data[] List; //initialiser list på en eller anden måde.
-		int n = List.length; //n er antallet af elementer i filen eller det data set vi importere.
+	public static void main(String[] args) throws SQLException {
+		Data[] List = mySQLtest.getLastTemp(); //Hent data.
+		int n = List.length;
 		boolean running = true;
 		int offset = 0, count = 0;
-		int maxTændt = (int) Math.floor((double) (n) * 0.6);
+		int maxTndt = (int) Math.floor((double) (n) * 0.6);
 
 		while(running){
-			//Slukker for alle køleskabe under 2 grader og tænder alle køleskabe over 5
+			//Slukker for alle kï¿½leskabe under 2 grader og tï¿½nder alle kï¿½leskabe over 5
 			update(List);
-			for(int i = 0; i<n; i++){ //for alle med temp højere end th
+			for(int i = 0; i<n; i++){ //for alle med temp hï¿½jere end th
 				if(List[i].getTemp() < List[i].getTempHigh()){
 					break;
 				}
@@ -33,8 +33,8 @@ public class AlgoritmeTest1 {
 				}
 			}
 			
-			for(int i = offset; i < n - count ; i++) { //Tjekker alle køleskabe mellem th og tl
-				if(i < (maxTændt - offset)){
+			for(int i = offset; i < n - count ; i++) { //Tjekker alle kï¿½leskabe mellem th og tl
+				if(i < (maxTndt - offset)){
 					List[i].setON(true); 
 				} else {
 					List[i].setON(false);

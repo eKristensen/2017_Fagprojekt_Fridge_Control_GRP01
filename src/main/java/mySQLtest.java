@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class mySQLtest
 {
@@ -8,6 +9,7 @@ public class mySQLtest
 	
 	private static String connectionString = "jdbc:mysql://172.23.23.124:3306/log";
 	private static Connection connection;
+	private static Statement cmd;
 	private static Statement command;
 	private static ResultSet data;
 	
@@ -97,6 +99,49 @@ public class mySQLtest
 	        e.printStackTrace();
 	    }
 	    return null;
+	}
+	
+	public static Data[] getLastTemp() throws SQLException {
+		Connection connectionget = getConnection();
+		String gettemps = "SELECT t1.* FROM data t1 JOIN (SELECT device, MAX(timestamp) timestamp FROM data WHERE `topic` = 'temp' GROUP BY device) t2 ON t1.device = t2.device AND t1.timestamp = t2.timestamp WHERE `topic` = 'temp' ORDER BY `t1`.`value` DESC";
+		try {
+			cmd = connectionget.createStatement();
+			data = cmd.executeQuery(gettemps);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				int n = 0;
+				ArrayList<Data> fromsql = new ArrayList<Data>();
+				if (data.first()) {
+					while(data.next()) {
+						System.out.println("device: " + data.getString("device") + " value: " + data.getString("value"));
+						String gateway = data.getString("gateway");
+						fromsql.add(new Data(gateway,data.getString("device"),data.getInt("value"),true,0,0));
+						n++;
+					}
+				}
+				Data[] sqla = fromsql.toArray(new Data[fromsql.size()]);
+				for (int i = 0; i < n; i++) {
+					String device = sqla[i].getDevice();
+					Statement cmd2 = connectionget.createStatement();
+					ResultSet data2 = cmd2.executeQuery("SELECT * FROM `data` WHERE `device` LIKE '"+device+"' ORDER BY `timestamp` ASC LIMIT 1");
+					boolean state = true;
+					if (data2.getString("value").equals("false")) state = false;
+					sqla[i].setON(state);
+				}
+				//SELECT * FROM `data` WHERE `device` LIKE '0015BC001A005664' ORDER BY `timestamp` ASC LIMIT 1
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		connectionget.close();
+		return null;
+		
 	}
 	
 }

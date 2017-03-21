@@ -35,19 +35,15 @@ public class Listener extends DefaultConsumer {
         	//System.out.println("topic: " + topic);
             String gateway = (String) jsonObject.get("gateway");
             if ((topic.equals("power") || topic.equals("curvol") || topic.equals("light") 
-            		|| topic.equals("temp") || topic.equals("motion") || topic.equals("buttin"))
-            		&& (gateway.equals("0015BC001C0011A7") || gateway.equals("0015BC001C00119D")) ) {
+            		|| topic.equals("temp") || topic.equals("motion") || topic.equals("buttin") || topic.equals("relay"))
+            		&& (gateway.equals("0015BC001C0011B1") || gateway.equals("0015BC001C00119D")) ) {
             	JSONObject state = (JSONObject)jsonObject.get("state");
                 //System.out.println(state.get("signal"));
                 
                 Long timestamp = (Long) jsonObject.get("timestamp");
                 String device = (String) jsonObject.get("device");
                 String relay = null,power = null,signal = null,voltage = null,current = null,light = null,temperature = null,motion = null;
-                if (topic == "relay") {
-                	relay = (String) state.get("relay");
-                	mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, relay);
-                }
-                else if (topic.equals("power")) {
+                if (topic.equals("power")) {
                 	power = (String) state.get("power");
                 	signal = (String) state.get("signal");
                 	mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, power);
@@ -68,6 +64,14 @@ public class Listener extends DefaultConsumer {
                 	signal = (String) state.get("signal");
                 	temperature = (String) state.get("temperature");
                 	mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, temperature);
+                }
+                else if (topic.equals("relay")) {
+                	relay = (String) state.get("relay");
+                	signal = "0";
+                	String value = "0";
+                	if (relay.equals("true")) value = "1";
+                	else value = "0";
+                	mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, value);        	
                 }
                 else if (topic.equals("motion")) {
                 	motion = (String) state.get("motion");

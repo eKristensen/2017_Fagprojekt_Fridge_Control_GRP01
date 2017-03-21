@@ -61,6 +61,7 @@ public class App {
         //testDeleteUnit(controlChannel, owesome_gateway);
         
         //new InitGRP01(controlChannel);
+        mySQLtest.getLastTemp();
         testGetList(controlChannel, owesome_gateway); 
 
         // Test LED
