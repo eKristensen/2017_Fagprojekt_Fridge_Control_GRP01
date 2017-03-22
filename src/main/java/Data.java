@@ -73,7 +73,7 @@ public void changeState(Channel channel, boolean state) throws IOException {
     cmd.addParameter("relay", Boolean.toString(state));
     String correlation = UUID.randomUUID().toString();
     cmd.setCorrelation(correlation);
-
+    System.out.println("Change state to " + state + " on relay: " + relay);
     String json = gson.toJson(cmd);
     channel.basicPublish("control", "", null, json.getBytes());
 }
