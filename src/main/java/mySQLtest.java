@@ -118,18 +118,20 @@ public class mySQLtest
 					while(data.next()) {
 						System.out.println("device: " + data.getString("device") + " value: " + data.getString("value"));
 						String gateway = data.getString("gateway");
-						fromsql.add(new Data(gateway,data.getString("device"),data.getInt("value"),true,0,0));
+						fromsql.add(new Data(gateway,data.getString("device"),null,data.getInt("value"),true,5,2));
 						n++;
 					}
 				}
 				Data[] sqla = fromsql.toArray(new Data[fromsql.size()]);
 				for (int i = 0; i < n; i++) {
-					String device = sqla[i].getDevice();
+					String sensor = sqla[i].getSensor();
 					Statement cmd2 = connectionget.createStatement();
-					ResultSet data2 = cmd2.executeQuery("SELECT * FROM `data` WHERE `device` LIKE '"+device+"' ORDER BY `timestamp` ASC LIMIT 1");
+					ResultSet data2 = cmd2.executeQuery("SELECT * FROM `data` WHERE `device` LIKE '"+sensor+"' ORDER BY `timestamp` ASC LIMIT 1");
 					boolean state = true;
 					if (data2.getString("value").equals("false")) state = false;
-					sqla[i].setON(state);
+					sqla[i].setState(state);
+					
+					//hent relæ fra listen over enhedssæt i databasen!
 				}
 				//SELECT * FROM `data` WHERE `device` LIKE '0015BC001A005664' ORDER BY `timestamp` ASC LIMIT 1
 				
