@@ -116,7 +116,7 @@ public class mySQLtest
 				ArrayList<Data> fromsql = new ArrayList<Data>();
 				if (data.first()) {
 					while(data.next()) {
-						System.out.println("device: " + data.getString("device") + " value: " + data.getString("value"));
+						//System.out.println("device: " + data.getString("device") + " value: " + data.getString("value"));
 						String gateway = data.getString("gateway");
 						fromsql.add(new Data(gateway,data.getString("device"),null,data.getInt("value"),true,5,2));
 						n++;
@@ -128,15 +128,24 @@ public class mySQLtest
 					Statement cmd2 = connectionget.createStatement();
 					ResultSet data2 = cmd2.executeQuery("SELECT * FROM `data` WHERE `device` LIKE '"+sensor+"' ORDER BY `timestamp` ASC LIMIT 1");
 					boolean state = true;
-					if (data2.getString("value").equals("false")) state = false;
-					sqla[i].setState(state);
+					if (data2.first()){
+						while (data2.next()) {
+							if (data2.getString("value").equals("false")) state = false;
+							sqla[i].setState(state);
+						}
+					}
+					
 					
 					//hent relæ fra listen over enhedssæt i databasen!
 					Statement cmd3 = connectionget.createStatement();
-					ResultSet data3 = cmd3.executeQuery("SELECT * FROM `grupper` WHERE `device` LIKE '"+sensor+"' ASC LIMIT 1");
-					sqla[i].setRelay(data3.getString("power"));
+					ResultSet data3 = cmd3.executeQuery("SELECT * FROM `grupper` WHERE `sensor` LIKE '"+sensor+"' LIMIT 1");
+					if (data3.first()) {
+						while (data3.next()) {
+							sqla[i].setRelay(data3.getString("power"));
+						}
+					}					
 				}
-				//SELECT * FROM `data` WHERE `device` LIKE '0015BC001A005664' ORDER BY `timestamp` ASC LIMIT 1
+				return sqla;
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

@@ -20,6 +20,7 @@ public class AlgoritmeTest1  {
 			//Slukker for alle k�leskabe under 2 grader og t�nder alle k�leskabe over 5
 			//update(List); //EK Comment: getLastTemp funktionen gør dette.
 			List = mySQLtest.getLastTemp();
+			n = List.length;
 			for(int i = 0; i<n; i++){ //for alle med temp h�jere end th
 				if(List[i].getTemp() < List[i].getTempHigh()){
 					break;
