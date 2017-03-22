@@ -17,7 +17,6 @@ public class AlgoritmeTest1  {
 		int maxTndt = (int) Math.floor((double) (n) * 0.6);
 
 		while(running){
-			Thread.sleep(180000); //vent 3 minutter)
 			//Slukker for alle k�leskabe under 2 grader og t�nder alle k�leskabe over 5
 			//update(List); //EK Comment: getLastTemp funktionen gør dette.
 			List = mySQLtest.getLastTemp();
@@ -50,6 +49,7 @@ public class AlgoritmeTest1  {
 					List[i].changeState(channel, false);
 				}
 			}
+			Thread.sleep(180000); //vent 3 minutter)
 		}
 	}
 	

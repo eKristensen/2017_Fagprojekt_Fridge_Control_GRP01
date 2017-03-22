@@ -56,6 +56,7 @@ public void setState(boolean state) {
 }
 
 public void setRelay(String relay) {
+	System.out.println("Relay set: " + relay);
 	this.relay = relay;
 }
 
@@ -73,7 +74,7 @@ public void changeState(Channel channel, boolean state) throws IOException {
     cmd.addParameter("relay", Boolean.toString(state));
     String correlation = UUID.randomUUID().toString();
     cmd.setCorrelation(correlation);
-    System.out.println("Change state to " + state + " on relay: " + relay);
+    System.out.println("Change state to " + state + " on relay: " + relay + " sensor:  " + sensor + " with gateway: " + gateway);
     String json = gson.toJson(cmd);
     channel.basicPublish("control", "", null, json.getBytes());
 }

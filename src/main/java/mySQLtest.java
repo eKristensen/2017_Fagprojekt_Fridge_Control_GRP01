@@ -130,20 +130,22 @@ public class mySQLtest
 					ResultSet data2 = cmd2.executeQuery("SELECT * FROM `data` WHERE `device` LIKE '"+sensor+"' ORDER BY `timestamp` ASC LIMIT 1");
 					boolean state = true;
 					if (data2.first()){
-						while (data2.next()) {
+						//while (data2.next()) {
 							if (data2.getString("value").equals("false")) state = false;
 							sqla[i].setState(state);
-						}
+						//}
 					}
 					
 					
 					//hent relæ fra listen over enhedssæt i databasen!
 					Statement cmd3 = connectionget.createStatement();
+					System.out.println("SELECT * FROM `grupper` WHERE `sensor` LIKE '"+sensor+"' LIMIT 1");
 					ResultSet data3 = cmd3.executeQuery("SELECT * FROM `grupper` WHERE `sensor` LIKE '"+sensor+"' LIMIT 1");
 					if (data3.first()) {
-						while (data3.next()) {
+						//while (data3.next()) {
+							System.out.println("hej, sat til: " + data3.getString("power"));
 							sqla[i].setRelay(data3.getString("power"));
-						}
+						//}
 					}					
 				}
 				return sqla;
