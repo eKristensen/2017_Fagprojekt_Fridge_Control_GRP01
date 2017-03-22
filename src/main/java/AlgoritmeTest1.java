@@ -1,4 +1,7 @@
+import java.io.IOException;
 import java.sql.SQLException;
+
+import com.rabbitmq.client.Channel;
 
 public class AlgoritmeTest1  {
 	 
@@ -6,7 +9,7 @@ public class AlgoritmeTest1  {
 
 	}
 	
-	public void controlfridges() throws SQLException {
+	public void controlfridges(Channel channel) throws SQLException, IOException {
 		Data[] List = mySQLtest.getLastTemp(); //Hent data.
 		int n = List.length;
 		boolean running = true;
@@ -16,12 +19,13 @@ public class AlgoritmeTest1  {
 		while(running){
 			//Slukker for alle k�leskabe under 2 grader og t�nder alle k�leskabe over 5
 			//update(List); //EK Comment: getLastTemp funktionen gør dette.
+			List = mySQLtest.getLastTemp();
 			for(int i = 0; i<n; i++){ //for alle med temp h�jere end th
 				if(List[i].getTemp() < List[i].getTempHigh()){
 					break;
 				}
 				if(List[i].getState() == false){
-					List[i].setState(true); 
+					List[i].changeState(channel, true);
 					offset++;
 				}
 			}
@@ -32,16 +36,16 @@ public class AlgoritmeTest1  {
 					break;
 				}
 				if(List[i].getState() == true) {
-					List[i].setState(false);
+					List[i].changeState(channel, false);
 					count++;
 				}
 			}
 			
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem th og tl
 				if(i < (maxTndt - offset)){
-					List[i].setState(true); 
+					List[i].changeState(channel, true);
 				} else {
-					List[i].setState(false);
+					List[i].changeState(channel, false);
 				}
 			}
 		}
