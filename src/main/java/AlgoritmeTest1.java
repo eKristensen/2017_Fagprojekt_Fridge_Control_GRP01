@@ -6,7 +6,7 @@ public class AlgoritmeTest1  {
 
 	}
 	
-	public void controlfridges() {
+	public void controlfridges() throws SQLException {
 		Data[] List = mySQLtest.getLastTemp(); //Hent data.
 		int n = List.length;
 		boolean running = true;
