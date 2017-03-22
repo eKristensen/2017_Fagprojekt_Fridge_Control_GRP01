@@ -68,6 +68,7 @@ public String getRelay() {
 }
 
 public void changeState(Channel channel, boolean state) throws IOException {
+	gson = new Gson();
     Command cmd = new Command("relay", gateway, relay);
     cmd.addParameter("relay", Boolean.toString(state));
     String correlation = UUID.randomUUID().toString();

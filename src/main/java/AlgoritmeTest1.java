@@ -9,7 +9,7 @@ public class AlgoritmeTest1  {
 
 	}
 	
-	public static void controlFridges(Channel channel) throws SQLException, IOException {
+	public static void controlFridges(Channel channel) throws SQLException, IOException, InterruptedException {
 		Data[] List = mySQLtest.getLastTemp(); //Hent data.
 		int n = List.length;
 		boolean running = true;
@@ -17,6 +17,7 @@ public class AlgoritmeTest1  {
 		int maxTndt = (int) Math.floor((double) (n) * 0.6);
 
 		while(running){
+			Thread.sleep(180000); //vent 3 minutter)
 			//Slukker for alle k�leskabe under 2 grader og t�nder alle k�leskabe over 5
 			//update(List); //EK Comment: getLastTemp funktionen gør dette.
 			List = mySQLtest.getLastTemp();

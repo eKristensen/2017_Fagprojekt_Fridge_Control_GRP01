@@ -123,6 +123,7 @@ public class mySQLtest
 					}
 				}
 				Data[] sqla = fromsql.toArray(new Data[fromsql.size()]);
+				n = sqla.length;
 				for (int i = 0; i < n; i++) {
 					String sensor = sqla[i].getSensor();
 					Statement cmd2 = connectionget.createStatement();
