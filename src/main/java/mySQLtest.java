@@ -132,6 +132,9 @@ public class mySQLtest
 					sqla[i].setState(state);
 					
 					//hent relæ fra listen over enhedssæt i databasen!
+					Statement cmd3 = connectionget.createStatement();
+					ResultSet data3 = cmd3.executeQuery("SELECT * FROM `grupper` WHERE `device` LIKE '"+sensor+"' ASC LIMIT 1");
+					sqla[i].setRelay(data3.getString("power"));
 				}
 				//SELECT * FROM `data` WHERE `device` LIKE '0015BC001A005664' ORDER BY `timestamp` ASC LIMIT 1
 				

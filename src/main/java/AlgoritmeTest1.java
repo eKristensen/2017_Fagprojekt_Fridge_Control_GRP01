@@ -9,7 +9,7 @@ public class AlgoritmeTest1  {
 
 	}
 	
-	public void controlfridges(Channel channel) throws SQLException, IOException {
+	public static void controlFridges(Channel channel) throws SQLException, IOException {
 		Data[] List = mySQLtest.getLastTemp(); //Hent data.
 		int n = List.length;
 		boolean running = true;

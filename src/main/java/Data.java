@@ -55,6 +55,10 @@ public void setState(boolean state) {
 	this.state = state;
 }
 
+public void setRelay(String relay) {
+	this.relay = relay;
+}
+
 public String getSensor() {
 	return this.sensor;
 }
