@@ -7,7 +7,7 @@ public class mySQLtest
 	
 	private static String password = "gf3qAdOPH1l9YtSp";
 	
-	private static String connectionString = "jdbc:mysql://localhost:3306/log";
+	private static String connectionString = "jdbc:mysql://172.22.22.104:3306/log";
 	private static Connection connection;
 	private static Statement cmd;
 	private static Statement command;
