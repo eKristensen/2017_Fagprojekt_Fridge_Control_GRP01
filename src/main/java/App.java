@@ -61,7 +61,7 @@ public class App {
         //testDeleteUnit(controlChannel, owesome_gateway);
         
         //new InitGRP01(controlChannel);
-        //mySQLtest.getLastTemp();
+        mySQLtest.getLastTemp();
         //testGetList(controlChannel, owesome_gateway); 
 
         //AlgoritmeTest1.controlFridges(controlChannel);

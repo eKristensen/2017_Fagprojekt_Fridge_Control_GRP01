@@ -7,7 +7,7 @@ public class mySQLtest
 	
 	private static String password = "gf3qAdOPH1l9YtSp";
 	
-	private static String connectionString = "jdbc:mysql://172.22.22.104:3306/log";
+	private static String connectionString = "jdbc:mysql://172.22.22.104:3306/fagprojekt";
 	private static Connection connection;
 	private static Statement cmd;
 	private static Statement command;
@@ -60,6 +60,7 @@ public class mySQLtest
 	
 	public static void CommitCache() {
 		try {
+			System.out.println("Sending");
 			connection = getConnection();
 			String sql = "INSERT INTO `data` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
 			
