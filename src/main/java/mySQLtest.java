@@ -3,11 +3,11 @@ import java.util.ArrayList;
 
 public class mySQLtest
 {
-	private static String username = "";
+	private static String username = "fagprojekt";
 	
-	private static String password = "";
+	private static String password = "gf3qAdOPH1l9YtSp";
 	
-	private static String connectionString = "jdbc:mysql://172.23.23.124:3306/log";
+	private static String connectionString = "jdbc:mysql://localhost:3306/log";
 	private static Connection connection;
 	private static Statement cmd;
 	private static Statement command;
