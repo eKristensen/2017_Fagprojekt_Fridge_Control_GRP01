@@ -57,14 +57,14 @@ public class App {
 
         // TESTS
         // Configure a set of devices
-        String owesome_gateway   = "0015BC001C0011A7";
-        testDeleteUnit(controlChannel, owesome_gateway);
+        //String owesome_gateway   = "0015BC001C0011A7";
+        //testDeleteUnit(controlChannel, owesome_gateway);
         
         //new InitGRP01(controlChannel);
-        mySQLtest.getLastTemp();
+        //mySQLtest.getLastTemp();
         //testGetList(controlChannel, owesome_gateway); 
 
-        AlgoritmeTest1.controlFridges(controlChannel);
+        //AlgoritmeTest1.controlFridges(controlChannel);
         
         // Test LED
         //testGreenLed(controlChannel, gateway, indicator);

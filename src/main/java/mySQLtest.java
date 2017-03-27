@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class mySQLtest
 {
-	private static String username = "javalogger";
+	private static String username = "";
 	
-	private static String password = "n5D1H0AAxVav0RXi";
+	private static String password = "";
 	
 	private static String connectionString = "jdbc:mysql://172.23.23.124:3306/log";
 	private static Connection connection;
@@ -118,7 +118,7 @@ public class mySQLtest
 					while(data.next()) {
 						//System.out.println("device: " + data.getString("device") + " value: " + data.getString("value"));
 						String gateway = data.getString("gateway");
-						fromsql.add(new Data(gateway,data.getString("device"),null,data.getInt("value"),true,5,2));
+						fromsql.add(new Data(gateway,data.getString("device"),null,data.getInt("value"),true,500,200));
 						n++;
 					}
 				}

@@ -76,7 +76,7 @@ public void changeState(Channel channel, boolean state) throws IOException {
     cmd.setCorrelation(correlation);
     System.out.println("Change state to " + state + " on relay: " + relay + " sensor:  " + sensor + " with gateway: " + gateway);
     String json = gson.toJson(cmd);
-    channel.basicPublish("control", "", null, json.getBytes());
+    //channel.basicPublish("control", "", null, json.getBytes()); //temp disable till fixed
 }
 
 public String getGateway() {
