@@ -44,11 +44,13 @@ public class AlgoritmeTest1  {
 			
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem th og tl
 				if(i < (maxTndt - offset)){
+					
 					List[i].changeState(channel, true);
 				} else {
 					List[i].changeState(channel, false);
 				}
 			}
+			offset = 0, count = 0;
 			Thread.sleep(180000); //vent 3 minutter)
 		}
 	}
