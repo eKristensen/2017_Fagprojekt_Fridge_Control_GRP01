@@ -17,6 +17,7 @@ public class InitGRP01 {
 
 
     public void addUnits() throws IOException {
+    	/*
         ApiCommand cmd = new ApiCommand("add", "0015BC001C0011A7");
         cmd.addDevice("relay", "0015BC001D0201C1");
         cmd.addDevice("relay", "0015BC001D02238F");
@@ -41,11 +42,33 @@ public class InitGRP01 {
         cmd.addDevice("indicator", "0015BC00280000CC");
         cmd.addDevice("indicator", "0015BC002800007B");
         sendCommand(cmd);
+        */
 
-        cmd = new ApiCommand("add", "0015BC001C00119D");
+    	/*
+    	ApiCommand cmd = new ApiCommand("add", "0015BC001C00119D");
         cmd.addDevice("relay", "0015BC001D02567C");
+        cmd.addDevice("relay", "0015BC001D020559");
+        cmd.addDevice("relay", "0015BC001D0222D3");
         cmd.addDevice("sensor", "0015BC001A005664");
+        cmd.addDevice("sensor", "0015BC001A00531A");
+        cmd.addDevice("sensor", "0015BC001A00573F");
         cmd.addDevice("indicator", "0015BC0028000038");
+        cmd.addDevice("indicator", "0015BC00280000FD");
+        cmd.addDevice("indicator", "0015BC0028000201");
+        sendCommand(cmd);*/
+    	
+/*
+    	ApiCommand cmd = new ApiCommand("add", "0015BC001C0011E4");
+        cmd.addDevice("relay", "0015BC001D025889");
+        cmd.addDevice("sensor", "0015BC001A0053C8");
+        cmd.addDevice("indicator", "0015BC00280000E0");
+        sendCommand(cmd);*/
+        
+
+    	ApiCommand cmd = new ApiCommand("add", "0015BC001C001222");
+        cmd.addDevice("relay", "0015BC001D02588D");
+        cmd.addDevice("sensor", "0015BC001A005385");
+        cmd.addDevice("indicator", "0015BC0028000235");
         sendCommand(cmd);
     }
 
