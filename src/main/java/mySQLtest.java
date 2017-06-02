@@ -90,7 +90,7 @@ public class mySQLtest
 		
 	}
 	
-	public static Connection getConnection() {
+	public static Connection getConnection() throws java.lang.ClassNotFoundException {
 	    try {
 	        Class.forName("com.mysql.jdbc.Driver");
 	        Connection conn = DriverManager.getConnection(connectionString, username, password);
