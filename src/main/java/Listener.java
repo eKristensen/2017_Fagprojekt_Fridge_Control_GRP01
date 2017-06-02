@@ -38,7 +38,7 @@ public class Listener extends DefaultConsumer {
             String gateway = (String) jsonObject.get("gateway");
             if ((topic.equals("power") || topic.equals("curvol") || topic.equals("light") 
             		|| topic.equals("temp") || topic.equals("motion") || topic.equals("buttin") || topic.equals("relay"))
-            		&& (gateway.equals("0015BC001C0011B1") || gateway.equals("0015BC001C00119D")) ) {
+            		&& (gateway.equals("0015BC001C0011B1") || gateway.equals("0015BC001C00119D") || gateway.equals("0015BC001C0011E4") || gateway.equals("0015BC001C001222") || gateway.equals("0015BC001C00142F")) ) {
             	JSONObject state = (JSONObject)jsonObject.get("state");
                 //System.out.println(state.get("signal"));
                 
