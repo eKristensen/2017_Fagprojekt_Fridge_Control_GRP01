@@ -60,6 +60,7 @@ public class mySQLtest
 	
 	public static void CommitCache() {
 		try {
+			System.out.println("Sending");
 			connection = getConnection();
 			String sql = "INSERT INTO `data` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
 			
@@ -95,7 +96,7 @@ public class mySQLtest
 	        Connection conn = DriverManager.getConnection(connectionString, username, password);
 	        if (!conn.isClosed())
 	            return conn;
-	    } catch (ClassNotFoundException | SQLException e) {
+	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	    return null;
@@ -158,26 +159,6 @@ public class mySQLtest
 
 		connectionget.close();
 		return null;
-		
-	}
-	
-	public static String[] getOudatedGateways(long time) throws SQLException {
-		Connection connectionget = getConnection();
-		String sql = "SELECT COUNT(ID), gate FROM `grupper` WHERE `incap` <= "+time+" GROUP BY gate";
-		cmd = connectionget.createStatement();
-		data = cmd.executeQuery(sql);
-		ArrayList<String> result = new ArrayList<String>();
-		if (data.first()) {
-			result.add(data.getString("gate"));
-			while(data.next()) {
-				//System.out.println("device: " + data.getString("device") + " value: " + data.getString("value"));
-				result.add(data.getString("gate"));
-			}
-		}
-		return result.toArray(new String[result.size()]);
-	}
-	
-	public static Gate[] getDevicesOnOutdatedGate() {
 		
 	}
 	
