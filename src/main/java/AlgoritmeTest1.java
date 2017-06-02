@@ -21,8 +21,8 @@ public class AlgoritmeTest1  {
 			//update(List); //EK Comment: getLastTemp funktionen gør dette.
 			List = mySQLtest.getLastTemp();
 			n = List.length;
-			for(int i = 0; i<n; i++){ //for alle med temp h�jere end th
-				if(List[i].getTemp() < List[i].getTempHigh()){
+			for(int i = 0; i<n; i++){ //for alle med temp h�jere end 5 grader
+				if(List[i].getTemp() < 5){ 
 					break;
 				}
 				if(List[i].getState() == false){
@@ -31,8 +31,8 @@ public class AlgoritmeTest1  {
 				}
 			}
 
-			for(int i = n - 1; i <= 0; i--) { //for alle med temp lavere end tl
-				if(List[i].getTemp() > List[i].getTempLow()){
+			for(int i = n - 1; i <= 0; i--) { //for alle med temp lavere end 2 grader
+				if(List[i].getTemp() > 2){
 					break;
 				}
 				if(List[i].getState() == true) {
@@ -41,7 +41,7 @@ public class AlgoritmeTest1  {
 				}
 			}
 			
-			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem th og tl
+			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem 5 og 2 grader
 				if(i < (maxTndt)){
 					List[i].changeState(channel, true);
 				} else {
