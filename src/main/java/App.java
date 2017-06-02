@@ -44,7 +44,7 @@ public class App {
         Consumer dataConsumer = new Listener(dataChannel);
         Consumer statusConsumer = new Listener(statusChannel);
         // start listening to data and status
-        //dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line to receive less noise in output while testing commands
+        dataChannel.basicConsume(dataQueue, true, dataConsumer); // comment this line to receive less noise in output while testing commands
         statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
         
@@ -60,9 +60,8 @@ public class App {
         //String owesome_gateway   = "0015BC001C0011A7";
         //testDeleteUnit(controlChannel, owesome_gateway);
         
-        //testDeleteUnit(controlChannel, "0015BC001C00119D");
-        new InitGRP01(controlChannel);
-        //mySQLtest.getLastTemp();
+        //new InitGRP01(controlChannel);
+        mySQLtest.getLastTemp();
         //testGetList(controlChannel, owesome_gateway); 
 
         //AlgoritmeTest1.controlFridges(controlChannel);
