@@ -9,7 +9,7 @@ public class AlgoritmeTest1  {
 
 	}
 	
-	public static void controlFridges(Channel channel) throws SQLException, IOException, InterruptedException {
+	public static void controlFridges(Channel channel) throws SQLException, IOException, InterruptedException, java.lang.ClassNotFoundException {
 		Data[] List = mySQLtest.getLastTemp(); //Hent data.
 		int n = List.length;
 		boolean running = true;
