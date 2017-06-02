@@ -58,7 +58,7 @@ public class mySQLtest
 
 	}
 	
-	public static void CommitCache() {
+	public static void CommitCache() throws java.lang.ClassNotFoundException {
 		try {
 			System.out.println("Sending");
 			connection = getConnection();
@@ -102,7 +102,7 @@ public class mySQLtest
 	    return null;
 	}
 	
-	public static Data[] getLastTemp() throws SQLException {
+	public static Data[] getLastTemp() throws SQLException,java.lang.ClassNotFoundException {
 		Connection connectionget = getConnection();
 		String gettemps = "SELECT t1.* FROM data t1 JOIN (SELECT device, MAX(timestamp) timestamp FROM data WHERE `topic` = 'temp' GROUP BY device) t2 ON t1.device = t2.device AND t1.timestamp = t2.timestamp WHERE `topic` = 'temp' ORDER BY `t1`.`value` DESC";
 		try {
