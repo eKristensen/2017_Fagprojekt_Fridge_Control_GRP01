@@ -22,7 +22,7 @@ public class mySQLtest
 
 	}
 	
-	public static void sendTomySQL(Long timestamp, String gateway, String device, String topic, String signal, String value) {
+	public static void sendTomySQL(Long timestamp, String gateway, String device, String topic, String signal, String value) throws java.lang.ClassNotFoundException {
 		
 		
 		
