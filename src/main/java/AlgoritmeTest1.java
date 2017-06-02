@@ -48,7 +48,7 @@ public class AlgoritmeTest1  {
 					List[i].changeState(channel, false);
 				}
 			}
-			offset = 0, count = 0;
+			offset = 0; count = 0;
 			Thread.sleep(180000); //vent 3 minutter)
 		}
 	}
