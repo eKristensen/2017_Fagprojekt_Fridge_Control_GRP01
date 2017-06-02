@@ -10,5 +10,5 @@ public class UpdateDevicesOnServer {
 		
 //		Gate[] devices = mySQLtest.getDevicesOnOutdatedGate(update);
 				
-	}
+//	}
 }
