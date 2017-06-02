@@ -8,7 +8,7 @@ public class UpdateDevicesOnServer {
 		String[] update = mySQLtest.getOudatedGateways(unixTime);
 		System.out.println(Arrays.toString(update));
 		
-		Gate[] devices = mySQLtest.getDevicesOnOutdatedGate(update)
+		Gate[] devices = mySQLtest.getDevicesOnOutdatedGate(update);
 				
 	}
 }
