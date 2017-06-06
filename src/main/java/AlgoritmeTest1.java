@@ -14,7 +14,7 @@ public class AlgoritmeTest1  {
 		int n = List.length;
 		boolean running = true;
 		int offset = 0, count = 0;
-		int maxTndt = (int) Math.floor((double) (n) * 0.3);
+		int maxTndt = (int) Math.floor((double) (n) * 0.5);
 
 		while(running){
 			//Slukker for alle k�leskabe under 2 grader og t�nder alle k�leskabe over 5
@@ -44,10 +44,17 @@ public class AlgoritmeTest1  {
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem 5 og 2 grader
 				if(i < (maxTndt)){
 					List[i].changeState(channel, true);
+					if(List[i].getTemp() < 3.5){
+						maxTndt -= 1;
+					}
 				} else {
 					List[i].changeState(channel, false);
 				}
 			}
+			if(maxTndt<offset){
+				maxTndt += 1;
+			}
+
 			offset = 0; count = 0;
 			Thread.sleep(180000); //vent 3 minutter)
 		}
