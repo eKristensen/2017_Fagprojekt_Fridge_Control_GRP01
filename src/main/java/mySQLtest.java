@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class mySQLtest {
 	private static String username = "fagprojekt";

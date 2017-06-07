@@ -1,5 +1,4 @@
 import java.util.Arrays;
-
 import com.rabbitmq.client.*;
 
 public class App {
@@ -42,7 +41,7 @@ public class App {
 		Consumer dataConsumer = new Listener(dataChannel, addgate);
 		Consumer statusConsumer = new Listener(statusChannel, null);
 
-		// dataChannel.basicConsume(dataQueue, true, dataConsumer);
+		dataChannel.basicConsume(dataQueue, true, dataConsumer);
 		statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
 		System.out.println(Arrays.toString(mySQLtest.GatewayList()));
