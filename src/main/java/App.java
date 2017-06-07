@@ -46,9 +46,6 @@ public class App {
 		dataChannel.basicConsume(dataQueue, true, dataConsumer);
 		statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
-		System.out.println(Arrays.toString(mySQLtest.GatewayList()));
-		System.out.println(Arrays.toString(mySQLtest.GatewayList()));
-
 		// connection.close();
 	}
 
