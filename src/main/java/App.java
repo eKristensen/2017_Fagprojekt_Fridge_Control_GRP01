@@ -13,6 +13,8 @@ public class App {
 		} else {
 			System.out.println("No argument, datacollection starting...");
 		}
+		
+		mySQLtest.GatewayList();
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setUsername("incap");

@@ -13,7 +13,7 @@ public class mySQLtest {
 
 	private static long gatewaytime = 0;
 	private static String[] gatewaycache = new String[0];
-	private static long sendtime = 0;
+	private static long sendtime = System.currentTimeMillis() / 1000L;
 	private static ArrayList<Fridgedata> sendcache = new ArrayList<Fridgedata>();
 
 	public static void main(String[] args) {
@@ -27,7 +27,6 @@ public class mySQLtest {
 			sendtime = System.currentTimeMillis() / 1000L;
 		}
 		sendcache.add(new Fridgedata(timestamp, gateway, device, topic, signal, value, false));
-
 	}
 
 	public static void CommitCache() throws java.lang.ClassNotFoundException {
@@ -37,17 +36,18 @@ public class mySQLtest {
 			String sql = "INSERT INTO `data` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
 
 			for (int i = 0; i < sendcache.size(); i++) {
+				if (i != 0)	sql = sql + ",";
 				sql = sql + "(NULL, '" + sendcache.get(i).getGateway() + "'";
 				sql = sql + ", '" + sendcache.get(i).getDevice() + "'";
 				sql = sql + ", '" + sendcache.get(i).getTimestamp() / 1000 + "'";
 				sql = sql + ", '" + sendcache.get(i).getTopic() + "', '" + sendcache.get(i).getValue() + "', '"
 						+ sendcache.get(i).getSignal() + "')";
-				if (i != sendcache.size() - 1)
-					sql = sql + ",";
-				sendcache.clear();
 			}
+			sendcache.clear();
 			sql = sql + ";";
-			connection.createStatement().executeQuery(sql); // send data
+			// System.out.println(sql);
+			cmd = connection.createStatement();
+			cmd.executeUpdate(sql);
 			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,15 +65,15 @@ public class mySQLtest {
 				cmd = connection.createStatement();
 				data = cmd.executeQuery(sql);
 				ArrayList<String> fromsql = new ArrayList<String>();
-				if (data.first()) {
-					while (data.next()) {
-						fromsql.add(data.getString("gate"));
-					}
+				while (data.next()) {
+					fromsql.add(data.getString("gate"));
 				}
+				connection.close();
 
 				gatewaycache = fromsql.toArray(new String[fromsql.size()]);
 
 				gatewaytime = System.currentTimeMillis() / 1000L;
+
 				return gatewaycache;
 			} catch (SQLException e) {
 				e.printStackTrace();
