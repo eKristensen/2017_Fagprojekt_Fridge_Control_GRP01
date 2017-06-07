@@ -97,6 +97,25 @@ public class mySQLtest {
 		}
 		return null;
 	}
+	
+	public static String getRelay(String motiondevice) throws java.lang.ClassNotFoundException {
+		try {
+			connection = getConnection();
+			String sql = "SELECT groupID FROM `devices` WHERE `device`= "+motiondevice+"';";
+			cmd = connection.createStatement();
+			data = cmd.executeQuery(sql);
+			String groupid = data.getString("groupID");
+			
+			sql = "SELECT device FROM `devices` WHERE `groupID`= "+groupid+" AND type=relay';";
+			cmd = connection.createStatement();
+			data = cmd.executeQuery(sql);
+			connection.close();
+			return data.getString("device");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public static Data[] getLastTemp() throws SQLException, java.lang.ClassNotFoundException {
 		Connection connectionget = getConnection();

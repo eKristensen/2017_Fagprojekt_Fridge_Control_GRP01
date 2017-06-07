@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
@@ -8,6 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.util.Arrays;
+import java.util.UUID;
 import java.io.IOException;
 
 public class Listener extends DefaultConsumer {
@@ -29,17 +31,12 @@ public class Listener extends DefaultConsumer {
 				Object obj = parser.parse(message);
 
 				JSONObject jsonObject = (JSONObject) obj;
-				// System.out.println(jsonObject);
 
 				String topic = (String) jsonObject.get("topic");
 
-				// System.out.println("topic: " + topic);
 				String gateway = (String) jsonObject.get("gateway");
-				if ((topic.equals("power") || topic.equals("curvol") || topic.equals("light") || topic.equals("temp")
-						|| topic.equals("motion") || topic.equals("buttin") || topic.equals("relay"))
-						&& Arrays.asList(mySQLtest.GatewayList()).contains(gateway)) {
+				if (Arrays.asList(mySQLtest.GatewayList()).contains(gateway)) {
 					JSONObject state = (JSONObject) jsonObject.get("state");
-					// System.out.println(state.get("signal"));
 
 					Long timestamp = (Long) jsonObject.get("timestamp");
 					String device = (String) jsonObject.get("device");
@@ -76,8 +73,17 @@ public class Listener extends DefaultConsumer {
 						motion = (String) state.get("motion");
 						signal = (String) state.get("signal");
 						String value = null;
-						if (motion.equals("true"))
+						if (motion.equals("true")) {
 							value = "1";
+							
+							Gson gson = new Gson();
+						    Command cmd = new Command("relay", gateway, mySQLtest.getRelay(device));
+						    cmd.addParameter("relay", "1");
+						    String correlation = UUID.randomUUID().toString();
+						    cmd.setCorrelation(correlation);
+						    String json = gson.toJson(cmd);
+						    App.GetChannel("Control").basicPublish("control", "", null, json.getBytes());
+						}
 						else
 							value = "0";
 						mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, value);

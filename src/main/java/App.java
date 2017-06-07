@@ -1,7 +1,10 @@
-import java.util.Arrays;
 import com.rabbitmq.client.*;
 
 public class App {
+
+private static Channel dataChannel = null;
+private static Channel statusChannel = null;
+private static Channel controlChannel = null;
 
 	public static void main(String[] args) throws Exception {
 
@@ -26,9 +29,9 @@ public class App {
 		factory.useSslProtocol();
 
 		Connection connection = factory.newConnection();
-		Channel dataChannel = connection.createChannel();
-		Channel statusChannel = connection.createChannel();
-		Channel controlChannel = connection.createChannel();
+		dataChannel = connection.createChannel();
+		statusChannel = connection.createChannel();
+		controlChannel = connection.createChannel();
 
 		dataChannel.exchangeDeclare("data", "topic", true);
 		statusChannel.exchangeDeclare("status", "topic", true);
@@ -47,6 +50,13 @@ public class App {
 		statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
 		// connection.close();
+	}
+	
+	public static Channel GetChannel(String chan) {
+		if (chan.equals("Control")) {
+			return controlChannel;
+		}
+		else return null;
 	}
 
 }
