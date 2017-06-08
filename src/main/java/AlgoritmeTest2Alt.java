@@ -51,6 +51,7 @@ public class AlgoritmeTest2Alt  {
 				}
 				sum += List[i].getTemp();
 			}
+			
 			sum = sum/(n-(offset+count));  //Ændrer antallet af tændte køleskabe afhængigt af middeltemperaturen
 			if(sum > 4) {
 				maxTndt += 1;
@@ -58,19 +59,8 @@ public class AlgoritmeTest2Alt  {
 				maxTndt -= 1;
 			}
 
-			offset = 0; count = 0;
+			offset = 0; count = 0; sum = 0;
 			Thread.sleep(180000); //vent 3 minutter)
 		}
 	}
-	
-	/*
-	public static void update(Data[] array){ 
-		int n = array.length;
-		for(int i = 0; i < n ; i++) { 
-			//array[i].setTemp(tilsvarende data fra database);
-			//array[i].setTempLow(tilsvarende data fra database);
-			//array[i].setTempHigh(tilsvarende data fra database);
-			//array[i].setON(tilsvarende data fra database);
-		}
-	}*/
 }
