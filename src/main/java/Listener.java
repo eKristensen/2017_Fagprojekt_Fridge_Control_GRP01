@@ -51,7 +51,7 @@ public class Listener extends DefaultConsumer {
 				else {
 				
 					//Tjekker om gatewaylist map indeholder gateway.
-				if (mySQLtest.GatewayList().containsKey(gateway)) {
+				if (Database.GatewayList().containsKey(gateway)) {
 					JSONObject state = (JSONObject) jsonObject.get("state");
 
 					Long timestamp = (Long) jsonObject.get("timestamp");
@@ -61,21 +61,21 @@ public class Listener extends DefaultConsumer {
 					if (topic.equals("power")) {
 						power = (String) state.get("power");
 						signal = (String) state.get("signal");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 7, signal, power);
+						Database.sendTomySQL(timestamp, gateway, device, 7, signal, power);
 					} else if (topic.equals("curvol")) {
 						voltage = (String) state.get("voltage");
 						current = (String) state.get("current");
 						signal = (String) state.get("signal");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 1, signal, voltage);
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 2, signal, current);
+						Database.sendTomySQL(timestamp, gateway, device, 1, signal, voltage);
+						Database.sendTomySQL(timestamp, gateway, device, 2, signal, current);
 					} else if (topic.equals("light")) {
 						signal = (String) state.get("signal");
 						light = (String) state.get("light");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 4, signal, light);
+						Database.sendTomySQL(timestamp, gateway, device, 4, signal, light);
 					} else if (topic.equals("temp")) {
 						signal = (String) state.get("signal");
 						temperature = (String) state.get("temperature");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 6, signal, temperature);
+						Database.sendTomySQL(timestamp, gateway, device, 6, signal, temperature);
 					} else if (topic.equals("relay")) {
 						relay = (String) state.get("relay");
 						signal = "0";
@@ -84,7 +84,7 @@ public class Listener extends DefaultConsumer {
 							value = "1";
 						else
 							value = "0";
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 5, signal, value);
+						Database.sendTomySQL(timestamp, gateway, device, 5, signal, value);
 					} else if (topic.equals("motion")) {
 						motion = (String) state.get("motion");
 						signal = (String) state.get("signal");
@@ -93,7 +93,7 @@ public class Listener extends DefaultConsumer {
 							value = "1";
 							
 							Gson gson = new Gson();
-						    Command cmd = new Command("relay", gateway, mySQLtest.getRelay(device));
+						    Command cmd = new Command("relay", gateway, Database.getRelay(device));
 						    cmd.addParameter("relay", "1");
 						    String correlation = UUID.randomUUID().toString();
 						    cmd.setCorrelation(correlation);
@@ -102,7 +102,7 @@ public class Listener extends DefaultConsumer {
 						}
 						else
 							value = "0";
-						mySQLtest.sendTomySQL(timestamp, gateway, device, 3, signal, value);
+						Database.sendTomySQL(timestamp, gateway, device, 3, signal, value);
 					} else if (topic.equals("buttin")) {
 						// To be added
 					}

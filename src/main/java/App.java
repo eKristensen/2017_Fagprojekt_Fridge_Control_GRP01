@@ -1,6 +1,6 @@
 import java.io.IOException;
-
 import com.rabbitmq.client.*;
+import java.util.Map;
 
 public class App {
 
@@ -11,7 +11,7 @@ private static Connection connection = null;
 
 	public static void main(String[] args) throws Exception {
 		
-		//mySQLtest.getLastTemp();
+		//Database.getLastTemp();
 		//System.exit(0);
 
 		String addgate = null;
@@ -23,7 +23,16 @@ private static Connection connection = null;
 			System.out.println("No argument, datacollection starting...");
 		}
 		
-		mySQLtest.GatewayList();
+		Map<String,Integer> gatews = Database.GatewayList();
+		
+		/*
+		for (Map.Entry< String,Integer> entry : gatews.entrySet()) {
+			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+		}
+		
+		if (gatews.containsKey("0015BC001C0011B1")) System.out.println("YES");
+		
+		System.out.println(gatews.get("0015BC001C0011B1")); */
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setUsername("incap");
@@ -58,7 +67,7 @@ private static Connection connection = null;
 		
 		if (addgate != null) new UpdateGateway(controlChannel,addgate);
 
-		mySQLtest.getLastTemp();
+		Database.getLastTemp();
 		
 		// connection.close();
 	}

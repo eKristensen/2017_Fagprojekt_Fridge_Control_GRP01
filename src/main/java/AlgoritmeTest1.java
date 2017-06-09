@@ -10,16 +10,16 @@ public class AlgoritmeTest1  {
 	}
 	
 	public static void controlFridges(Channel channel) throws SQLException, IOException, InterruptedException, java.lang.ClassNotFoundException {
-		Data[] List = mySQLtest.getLastTemp(); //Hent data.
+		Data[] List = Database.getLastTemp(); //Hent data.
 		int n = List.length;
 		boolean running = true;
 		int offset = 0, count = 0;
-		int maxTndt = (int) Math.floor((double) (n) * 0.5);
+		int maxTndt = (int) Math.floor((double) (n) * 0.3);
 
 		while(running){
 			//Slukker for alle k�leskabe under 2 grader og t�nder alle k�leskabe over 5
 			//update(List); //EK Comment: getLastTemp funktionen gør dette.
-			List = mySQLtest.getLastTemp();
+			List = Database.getLastTemp();
 			n = List.length;
 			for(int i = 0; i<n; i++){ //for alle med temp h�jere end 5 grader
 				if(List[i].getTemp() < 5){ 
@@ -44,17 +44,10 @@ public class AlgoritmeTest1  {
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem 5 og 2 grader
 				if(i < (maxTndt)){
 					List[i].changeState(channel, true);
-					if(List[i].getTemp() < 3.5){
-						maxTndt -= 1;
-					}
 				} else {
 					List[i].changeState(channel, false);
 				}
 			}
-			if(maxTndt<offset){
-				maxTndt += 1;
-			}
-
 			offset = 0; count = 0;
 			Thread.sleep(180000); //vent 3 minutter)
 		}
