@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import com.rabbitmq.client.*;
 
 public class App {
@@ -5,13 +7,17 @@ public class App {
 private static Channel dataChannel = null;
 private static Channel statusChannel = null;
 private static Channel controlChannel = null;
+private static Connection connection = null;
 
 	public static void main(String[] args) throws Exception {
+		
+		//mySQLtest.getLastTemp();
+		//System.exit(0);
 
 		String addgate = null;
 
 		if (args.length >= 1) {
-			System.out.println("Input registred. The gateway " + args[0] + " will be added.");
+			System.out.println("Input registred. The gateway " + args[0] + " will be updated.");
 			addgate = args[0];
 		} else {
 			System.out.println("No argument, datacollection starting...");
@@ -28,7 +34,7 @@ private static Channel controlChannel = null;
 		factory.setAutomaticRecoveryEnabled(true);
 		factory.useSslProtocol();
 
-		Connection connection = factory.newConnection();
+		connection = factory.newConnection();
 		dataChannel = connection.createChannel();
 		statusChannel = connection.createChannel();
 		controlChannel = connection.createChannel();
@@ -43,12 +49,17 @@ private static Channel controlChannel = null;
 		dataChannel.queueBind(dataQueue, "data", "#");
 		statusChannel.queueBind(statusQueue, "status", "#");
 
-		Consumer dataConsumer = new Listener(dataChannel, addgate);
-		Consumer statusConsumer = new Listener(statusChannel, null);
+		Consumer dataConsumer = new Listener(dataChannel, null);
+		Consumer statusConsumer = new Listener(statusChannel, addgate);
 
-		dataChannel.basicConsume(dataQueue, true, dataConsumer);
+		if (addgate == null) dataChannel.basicConsume(dataQueue, true, dataConsumer);
 		statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
+		
+		if (addgate != null) new UpdateGateway(controlChannel,addgate);
+
+		mySQLtest.getLastTemp();
+		
 		// connection.close();
 	}
 	
@@ -57,6 +68,15 @@ private static Channel controlChannel = null;
 			return controlChannel;
 		}
 		else return null;
+	}
+	
+	public static void Disconnect() {
+		try {
+			connection.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

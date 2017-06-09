@@ -1,5 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class mySQLtest {
 	private static String username = "fagprojekt";
@@ -12,15 +14,17 @@ public class mySQLtest {
 	private static ResultSet data;
 
 	private static long gatewaytime = 0;
-	private static String[] gatewaycache = new String[0];
+	private static Map<Integer,String> gatewaycache = new HashMap<Integer,String>();
 	private static long sendtime = System.currentTimeMillis() / 1000L;
 	private static ArrayList<Fridgedata> sendcache = new ArrayList<Fridgedata>();
+	private static long devicetime = 0;
+	private static Map<Integer,String> devicecache = new HashMap<Integer,String>();
 
 	public static void main(String[] args) {
 
 	}
 
-	public static void sendTomySQL(Long timestamp, String gateway, String device, String topic, String signal,
+	public static void sendTomySQL(Long timestamp, String gateway, String device, int topic, String signal,
 			String value) throws java.lang.ClassNotFoundException {
 		if ((sendtime + 1 * 60) <= (System.currentTimeMillis() / 1000L)) {
 			CommitCache();
@@ -32,13 +36,16 @@ public class mySQLtest {
 	public static void CommitCache() throws java.lang.ClassNotFoundException {
 		try {
 			System.out.println("Sending");
+			GatewayList(); //Update list cache
+			DeviceList();
 			connection = getConnection();
-			String sql = "INSERT INTO `data` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
+			String sql = "INSERT INTO `dataV2` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
 
 			for (int i = 0; i < sendcache.size(); i++) {
-				if (i != 0)	sql = sql + ",";
-				sql = sql + "(NULL, '" + sendcache.get(i).getGateway() + "'";
-				sql = sql + ", '" + sendcache.get(i).getDevice() + "'";
+				if (i != 0)
+					sql = sql + ",";
+				sql = sql + "(NULL, '" + gatewaycache.get(sendcache.get(i).getGateway()) + "'";
+				sql = sql + ", '" + devicecache.get(sendcache.get(i).getDevice()) + "'";
 				sql = sql + ", '" + sendcache.get(i).getTimestamp() / 1000 + "'";
 				sql = sql + ", '" + sendcache.get(i).getTopic() + "', '" + sendcache.get(i).getValue() + "', '"
 						+ sendcache.get(i).getSignal() + "')";
@@ -55,22 +62,18 @@ public class mySQLtest {
 
 	}
 
-	public static String[] GatewayList() throws java.lang.ClassNotFoundException {
-		// System.out.println("nextupdate: "+(gatewaytime+ 5 * 60)+" current
-		// time: "+(System.currentTimeMillis() / 1000L));
+	public static Map<Integer,String> GatewayList() throws java.lang.ClassNotFoundException {
 		if ((gatewaytime + 5 * 60) <= (System.currentTimeMillis() / 1000L)) {
 			try {
 				connection = getConnection();
-				String sql = "SELECT gate FROM `grupper`";
+				String sql = "SELECT ID,device FROM `gateways`";
 				cmd = connection.createStatement();
 				data = cmd.executeQuery(sql);
-				ArrayList<String> fromsql = new ArrayList<String>();
+				gatewaycache = new HashMap<Integer,String>();
 				while (data.next()) {
-					fromsql.add(data.getString("gate"));
+					gatewaycache.put(data.getInt("ID"),data.getString("device"));
 				}
 				connection.close();
-
-				gatewaycache = fromsql.toArray(new String[fromsql.size()]);
 
 				gatewaytime = System.currentTimeMillis() / 1000L;
 
@@ -83,7 +86,32 @@ public class mySQLtest {
 		} else {
 			return gatewaycache;
 		}
+	}
+	
+	public static Map<Integer,String> DeviceList() throws java.lang.ClassNotFoundException {
+		if ((devicetime + 5 * 60) <= (System.currentTimeMillis() / 1000L)) {
+			try {
+				connection = getConnection();
+				String sql = "SELECT ID,device FROM `devices`";
+				cmd = connection.createStatement();
+				data = cmd.executeQuery(sql);
+				devicecache = new HashMap<Integer,String>();
+				while (data.next()) {
+					devicecache.put(data.getInt("ID"),data.getString("device"));
+				}
+				connection.close();
 
+				devicetime = System.currentTimeMillis() / 1000L;
+
+				return devicecache;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+		} else {
+			return devicecache;
+		}
 	}
 
 	public static Connection getConnection() throws java.lang.ClassNotFoundException {
@@ -97,16 +125,16 @@ public class mySQLtest {
 		}
 		return null;
 	}
-	
+
 	public static String getRelay(String motiondevice) throws java.lang.ClassNotFoundException {
 		try {
 			connection = getConnection();
-			String sql = "SELECT groupID FROM `devices` WHERE `device`= "+motiondevice+"';";
+			String sql = "SELECT groupID FROM `devices` WHERE `device`= " + motiondevice + "';";
 			cmd = connection.createStatement();
 			data = cmd.executeQuery(sql);
 			String groupid = data.getString("groupID");
-			
-			sql = "SELECT device FROM `devices` WHERE `groupID`= "+groupid+" AND type=relay';";
+
+			sql = "SELECT device FROM `devices` WHERE `groupID`= " + groupid + " AND type=relay';";
 			cmd = connection.createStatement();
 			data = cmd.executeQuery(sql);
 			connection.close();
@@ -117,56 +145,41 @@ public class mySQLtest {
 		}
 	}
 
-	public static Data[] getLastTemp() throws SQLException, java.lang.ClassNotFoundException {
-		Connection connectionget = getConnection();
-		String gettemps = "SELECT t1.* FROM data t1 JOIN (SELECT device, MAX(timestamp) timestamp FROM data WHERE `topic` = 'temp' GROUP BY device) t2 ON t1.device = t2.device AND t1.timestamp = t2.timestamp WHERE `topic` = 'temp' ORDER BY `t1`.`value` DESC";
+	public static Map<String,String> getDevices(String gateway) throws java.lang.ClassNotFoundException {
 		try {
-			cmd = connectionget.createStatement();
-			data = cmd.executeQuery(gettemps);
+			connection = getConnection();
+			String sql = "SELECT ID FROM `grupper` WHERE `gate`= '" + gateway + "';";
+			cmd = connection.createStatement();
+			data = cmd.executeQuery(sql);
+			String groupid = null;
+			while (data.next()) {
+				groupid = data.getString("ID");
+			}
+			sql = "SELECT device,type FROM `devices` WHERE `groupID`= '" + groupid + "';";
+			cmd = connection.createStatement();
+			data = cmd.executeQuery(sql);
+			Map<String,String> fromsql = new HashMap<String,String>();
+			while (data.next()) {
+				fromsql.put(data.getString("device"), data.getString("type"));
+			}
+			connection.close();
+			return fromsql;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				int n = 0;
-				ArrayList<Data> fromsql = new ArrayList<Data>();
-				if (data.first()) {
-					while (data.next()) {
-						String gateway = data.getString("gateway");
-						fromsql.add(new Data(gateway, data.getString("device"), null, data.getInt("value"), true, 500,
-								200));
-						n++;
-					}
-				}
-				Data[] sqla = fromsql.toArray(new Data[fromsql.size()]);
-				n = sqla.length;
-				for (int i = 0; i < n; i++) {
-					String sensor = sqla[i].getSensor();
-					Statement cmd2 = connectionget.createStatement();
-					ResultSet data2 = cmd2.executeQuery("SELECT * FROM `data` WHERE `device` LIKE '" + sensor
-							+ "' ORDER BY `timestamp` ASC LIMIT 1");
-					boolean state = true;
-					if (data2.first()) {
-						if (data2.getString("value").equals("false"))
-							state = false;
-						sqla[i].setState(state);
-					}
-					Statement cmd3 = connectionget.createStatement();
-					System.out.println("SELECT * FROM `grupper` WHERE `sensor` LIKE '" + sensor + "' LIMIT 1");
-					ResultSet data3 = cmd3
-							.executeQuery("SELECT * FROM `grupper` WHERE `sensor` LIKE '" + sensor + "' LIMIT 1");
-					if (data3.first()) {
-						System.out.println("hej, sat til: " + data3.getString("power"));
-						sqla[i].setRelay(data3.getString("power"));
-					}
-				}
-				return sqla;
+			return null;
+		}
+	}
 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+	public static Data[] getLastTemp() throws java.lang.ClassNotFoundException {
+		try {
+			connection = getConnection();
+			connection.close();
+			return null;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
-		connectionget.close();
 		return null;
 
 	}

@@ -8,15 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import java.util.Arrays;
 import java.util.UUID;
 import java.io.IOException;
 
 public class Listener extends DefaultConsumer {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private static int gatewaycnt = 0;
+	private static String addgate = null;
 
-	public Listener(Channel channel, String addgate) {
+	public Listener(Channel channel, String addgateinput) {
 		super(channel);
+		addgate = addgateinput;
 	}
 
 	@Override
@@ -35,7 +37,21 @@ public class Listener extends DefaultConsumer {
 				String topic = (String) jsonObject.get("topic");
 
 				String gateway = (String) jsonObject.get("gateway");
-				if (Arrays.asList(mySQLtest.GatewayList()).contains(gateway)) {
+				
+				if (addgate != null) {
+					if (gateway.contains(addgate)) {
+						if (gatewaycnt < 1) {
+							gatewaycnt++;
+						}
+						else {
+							App.Disconnect();
+						}
+					}
+				}
+				else {
+				
+					//Tjekker om gatewaylist map indeholder gateway.
+				if (mySQLtest.GatewayList().containsKey(gateway)) {
 					JSONObject state = (JSONObject) jsonObject.get("state");
 
 					Long timestamp = (Long) jsonObject.get("timestamp");
@@ -45,21 +61,21 @@ public class Listener extends DefaultConsumer {
 					if (topic.equals("power")) {
 						power = (String) state.get("power");
 						signal = (String) state.get("signal");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, power);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 7, signal, power);
 					} else if (topic.equals("curvol")) {
 						voltage = (String) state.get("voltage");
 						current = (String) state.get("current");
 						signal = (String) state.get("signal");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, "voltage", signal, voltage);
-						mySQLtest.sendTomySQL(timestamp, gateway, device, "current", signal, current);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 1, signal, voltage);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 2, signal, current);
 					} else if (topic.equals("light")) {
 						signal = (String) state.get("signal");
 						light = (String) state.get("light");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, light);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 4, signal, light);
 					} else if (topic.equals("temp")) {
 						signal = (String) state.get("signal");
 						temperature = (String) state.get("temperature");
-						mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, temperature);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 6, signal, temperature);
 					} else if (topic.equals("relay")) {
 						relay = (String) state.get("relay");
 						signal = "0";
@@ -68,7 +84,7 @@ public class Listener extends DefaultConsumer {
 							value = "1";
 						else
 							value = "0";
-						mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, value);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 5, signal, value);
 					} else if (topic.equals("motion")) {
 						motion = (String) state.get("motion");
 						signal = (String) state.get("signal");
@@ -86,10 +102,12 @@ public class Listener extends DefaultConsumer {
 						}
 						else
 							value = "0";
-						mySQLtest.sendTomySQL(timestamp, gateway, device, topic, signal, value);
+						mySQLtest.sendTomySQL(timestamp, gateway, device, 3, signal, value);
 					} else if (topic.equals("buttin")) {
 						// To be added
 					}
+				}
+				
 				}
 
 			} catch (ParseException e) {

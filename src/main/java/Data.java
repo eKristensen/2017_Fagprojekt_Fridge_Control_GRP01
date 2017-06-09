@@ -9,8 +9,6 @@ private String sensor;
 private String relay;
 private int Temp;
 private boolean state;
-private int TempHigh;
-private int TempLow;
 private Gson gson;
 
 public Data(String gateway, String sensor, String relay, int Temp, boolean state, int TempHigh, int TempLow) {
@@ -19,8 +17,6 @@ public Data(String gateway, String sensor, String relay, int Temp, boolean state
 	this.relay = relay;
 	this.Temp = Temp;
 	this.state = state;
-	this.TempHigh = TempHigh;
-	this.TempLow = TempLow;
 }
 
 public int getTemp() {
@@ -29,22 +25,6 @@ public int getTemp() {
 
 public void setTemp(int temp) {
 	Temp = temp;
-}
-
-public int getTempHigh() {
-	return TempHigh;
-}
-
-public void setTempHigh(int temp) {
-	TempHigh = temp;
-}
-
-public int getTempLow() {
-	return TempLow;
-}
-
-public void setTempLow(int temp) {
-	TempLow = temp;
 }
 
 public boolean getState() {
@@ -76,7 +56,7 @@ public void changeState(Channel channel, boolean state) throws IOException {
     cmd.setCorrelation(correlation);
     System.out.println("Change state to " + state + " on relay: " + relay + " sensor:  " + sensor + " with gateway: " + gateway);
     String json = gson.toJson(cmd);
-    //channel.basicPublish("control", "", null, json.getBytes()); //temp disable till fixed
+    channel.basicPublish("control", "", null, json.getBytes());
 }
 
 public String getGateway() {
