@@ -1,6 +1,5 @@
 import java.io.IOException;
 import com.rabbitmq.client.*;
-import java.util.Map;
 
 public class App {
 
@@ -23,17 +22,8 @@ private static Connection connection = null;
 			System.out.println("No argument, datacollection starting...");
 		}
 		
-		Map<String,Integer> gatews = Database.GatewayList();
+		Database.GatewayList();
 		
-		/*
-		for (Map.Entry< String,Integer> entry : gatews.entrySet()) {
-			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
-		}
-		
-		if (gatews.containsKey("0015BC001C0011B1")) System.out.println("YES");
-		
-		System.out.println(gatews.get("0015BC001C0011B1")); */
-
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setUsername("incap");
 		factory.setPassword("ORDZnBMCLH4BRYAAbdi1i3jTVonWozDE");

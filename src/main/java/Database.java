@@ -131,10 +131,12 @@ public class Database {
 			DeviceList();
 			connection = getConnection();
 			String sql = "SELECT device FROM `devices` WHERE `groupID`= " + devicecache.get(motiondevice) + " AND type='relay';"; //Der skal være type=relay her
-			System.out.println(sql);
 			cmd = connection.createStatement();
 			data = cmd.executeQuery(sql);
-			String device = data.getString("device");
+			String device = "";
+			while (data.next()) {
+				device = data.getString("device");
+			}
 			connection.close();
 			return device;
 		} catch (SQLException e) {
