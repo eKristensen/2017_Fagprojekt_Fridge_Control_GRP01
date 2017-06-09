@@ -39,7 +39,7 @@ public class Database {
 			GatewayList(); //Update list cache
 			DeviceList();
 			connection = getConnection();
-			String sql = "INSERT INTO `dataV2test` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
+			String sql = "INSERT INTO `data` (`ID`, `gateway`, `device`, `timestamp`, `topic`, `value`, `signaldb`) VALUES ";
 
 			for (int i = 0; i < sendcache.size(); i++) {
 				if (i != 0)
