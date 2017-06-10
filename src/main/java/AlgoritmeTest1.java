@@ -25,20 +25,16 @@ public class AlgoritmeTest1  {
 				if(List[i].getTemp() < 5){ 
 					break;
 				}
-				if(List[i].getState() == false){
-					List[i].changeState(channel, true);
-					offset++;
-				}
+				List[i].changeState(channel, true);
+				offset++;
 			}
 
 			for(int i = n - 1; i <= 0; i--) { //for alle med temp lavere end 2 grader
 				if(List[i].getTemp() > 2){
 					break;
 				}
-				if(List[i].getState() == true) {
-					List[i].changeState(channel, false);
-					count++;
-				}
+				List[i].changeState(channel, false);
+				count++;
 			}
 			
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem 5 og 2 grader

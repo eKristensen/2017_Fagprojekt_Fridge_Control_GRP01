@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 import com.rabbitmq.client.*;
 
 public class App {
@@ -10,9 +12,15 @@ private static Connection connection = null;
 
 	public static void main(String[] args) throws Exception {
 		
-		//Database.getLastTemp();
-		//System.exit(0);
-
+		/*
+		System.out.println(Boolean.toString(true));
+		
+		System.out.println(System.currentTimeMillis() / 1000L - 5* 60);
+		
+		Database.getLastTemp();
+		System.exit(0);
+		*/
+		
 		String addgate = null;
 
 		if (args.length >= 1) {
@@ -57,7 +65,7 @@ private static Connection connection = null;
 		
 		if (addgate != null) new UpdateGateway(controlChannel,addgate);
 
-		Database.getLastTemp();
+		AlgoritmeTest1.controlFridges(controlChannel);
 		
 		// connection.close();
 	}
@@ -71,6 +79,14 @@ private static Connection connection = null;
 	
 	public static void Disconnect() {
 		try {
+			try {
+				dataChannel.close();
+		        statusChannel.close();
+		        controlChannel.close();
+			} catch (TimeoutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			connection.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

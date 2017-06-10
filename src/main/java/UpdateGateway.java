@@ -25,20 +25,11 @@ public class UpdateGateway {
 		
 		Map<String,String> devices = Database.getDevices(gateway);
 		
-	//	for (int i = 0; i < devices.size(); i++) {
-	//		System.out.println("FIX MISSING HERE");
-//			cmd.addDevice(devices.get(i).getTopic(), devices.get(i).getDevice());
-	//	}
-		
 		for (Map.Entry<String, String> entry : devices.entrySet()) {
-			//System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
 			cmd.addDevice(entry.getValue(), entry.getKey());
-			//cmd.addDevice(devices.get(i).getTopic(), devices.get(i).getDevice());
 		}
 		
 		sendCommand(cmd);
-		
-		//App.Disconnect();
 	}
 
 	private void sendCommand(ApiCommand cmd) throws IOException {
