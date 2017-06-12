@@ -65,7 +65,7 @@ private static Connection connection = null;
 		
 		if (addgate != null) new UpdateGateway(controlChannel,addgate);
 
-		AlgoritmeTest1.controlFridges(controlChannel);
+		if (addgate == null) AlgoritmeTest1.controlFridges(controlChannel);
 		
 		// connection.close();
 	}
