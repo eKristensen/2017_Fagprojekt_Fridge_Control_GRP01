@@ -22,7 +22,7 @@ public class AlgoritmeTest1  {
 			List = Database.getLastTemp();
 			n = List.length;
 			for(int i = 0; i<n; i++){ //for alle med temp h�jere end 5 grader
-				if(List[i].getTemp() < 5){ 
+				if(List[i].getTemp() < 500){ 
 					break;
 				}
 				List[i].changeState(channel, true);
@@ -30,7 +30,7 @@ public class AlgoritmeTest1  {
 			}
 
 			for(int i = n - 1; i <= 0; i--) { //for alle med temp lavere end 2 grader
-				if(List[i].getTemp() > 2){
+				if(List[i].getTemp() > 200){
 					break;
 				}
 				List[i].changeState(channel, false);
@@ -40,7 +40,7 @@ public class AlgoritmeTest1  {
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem 5 og 2 grader
 				if(i < (maxTndt)){
 					List[i].changeState(channel, true);
-					if(List[i].getTemp() < 3){maxTndt -= 1;}
+					if(List[i].getTemp() < 300){maxTndt -= 1;}
 				} else {
 					List[i].changeState(channel, false);
 				}
