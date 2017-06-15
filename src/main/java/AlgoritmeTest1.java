@@ -40,10 +40,12 @@ public class AlgoritmeTest1  {
 			for(int i = offset; i < n - count ; i++) { //Tjekker alle k�leskabe mellem 5 og 2 grader
 				if(i < (maxTndt)){
 					List[i].changeState(channel, true);
+					if(List[i].getTemp() < 3){maxTndt -= 1;}
 				} else {
 					List[i].changeState(channel, false);
 				}
 			}
+			if(maxTndt<offset){maxTndt += 1;}
 			offset = 0; count = 0;
 			Thread.sleep(180000); //vent 3 minutter)
 		}
