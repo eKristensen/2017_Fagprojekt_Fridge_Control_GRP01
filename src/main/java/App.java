@@ -21,11 +21,13 @@ private static Connection connection = null;
 		System.exit(0);
 		*/
 		
+		Boolean run = true;
 		String addgate = null;
 
 		if (args.length >= 1) {
 			System.out.println("Input registred. The gateway " + args[1] + " will be " + args[0] + ".");
-			addgate = args[0];
+			addgate = args[1];
+			run = false;
 		} else {
 			System.out.println("No argument, datacollection starting...");
 		}
@@ -63,9 +65,9 @@ private static Connection connection = null;
 		statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
 		
-		if (addgate != null) new UpdateGateway(controlChannel,args[1],args[0]);
+		if (!run) new UpdateGateway(controlChannel,args[1],args[0]);
 
-		if (addgate == null) AlgoritmeTest1.controlFridges(controlChannel);
+		if (run) AlgoritmeTest1.controlFridges(controlChannel);
 		
 		// connection.close();
 	}
