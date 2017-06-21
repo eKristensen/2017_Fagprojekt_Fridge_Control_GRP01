@@ -91,7 +91,7 @@ public class Listener extends DefaultConsumer {
 						String value = null;
 						if (motion.equals("true")) {
 							value = "1";
-							
+							/*
 							Gson gson = new Gson();
 						    Command cmd = new Command("relay", gateway, Database.getRelay(device));
 						    System.out.println("Tænd relæet: "+Database.getRelay(device));
@@ -99,7 +99,7 @@ public class Listener extends DefaultConsumer {
 						    String correlation = UUID.randomUUID().toString();
 						    cmd.setCorrelation(correlation);
 						    String json = gson.toJson(cmd);
-						    App.GetChannel("Control").basicPublish("control", "", null, json.getBytes());
+						    App.GetChannel("Control").basicPublish("control", "", null, json.getBytes());*/
 						}
 						else {
 							value = "0";

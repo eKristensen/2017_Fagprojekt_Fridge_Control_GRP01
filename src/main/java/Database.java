@@ -177,40 +177,15 @@ public class Database {
 				relaysfromID.put(data.getInt("groupID"), data.getString("relay"));
 			}
 			
-			/*
-			for (Map.Entry<Integer, String> entry : relaysfromID.entrySet()) {
-				System.out.println("relaysfromID: Key : " + entry.getKey() + " Value : " + entry.getValue());
-			}
-			*/
-			
-			/*
-			//Hent seneste status
-			//SELECT value,timestamp,gateway,device FROM `data` WHERE topic=5 AND device=22 ORDER BY `data`.`timestamp` DESC LIMIT 1
-			Map<Integer,String> statusfromID = new HashMap<Integer,String>();;
-			for (Map.Entry<Integer, String> entry : relaysfromID.entrySet()) {
-				sql = "SELECT value FROM `data` WHERE topic=5 AND device="+devicecache.get(entry.getValue())+" ORDER BY `data`.`timestamp` DESC LIMIT 1";
-				System.out.println("status: "+sql);
-				cmd = connection.createStatement();
-				data = cmd.executeQuery(sql);
-				int key = entry.getKey();
-				while (data.next()) {
-					statusfromID.put(key, data.getString("value"));
-				}
-			}
-
-			for (Map.Entry<Integer, String> entry : statusfromID.entrySet()) {
-				System.out.println("statusfromID: Key : " + entry.getKey() + " Value : " + entry.getValue());
-			}*/
-			
 			long time = System.currentTimeMillis() / 1000L - 5* 60; //unix for 5 min siden
 			// Hent grupper med motion inden for de sidste 3 sæt.
-			sql = "SELECT devices.groupID FROM data t1 INNER JOIN (SELECT device, MAX(timestamp) timestamp FROM data WHERE `topic` = 3 AND value=1 AND timestamp > "+time+" GROUP BY device) t2 ON t1.device = t2.device AND t1.timestamp = t2.timestamp INNER JOIN devices ON devices.ID=t1.device INNER JOIN groups ON devices.groupID=groups.ID WHERE groups.aktiv=1 AND topic=3 AND value=1 AND t1.timestamp > "+time;
+			/*sql = "SELECT devices.groupID FROM data t1 INNER JOIN (SELECT device, MAX(timestamp) timestamp FROM data WHERE `topic` = 3 AND value=1 AND timestamp > "+time+" GROUP BY device) t2 ON t1.device = t2.device AND t1.timestamp = t2.timestamp INNER JOIN devices ON devices.ID=t1.device INNER JOIN groups ON devices.groupID=groups.ID WHERE groups.aktiv=1 AND topic=3 AND value=1 AND t1.timestamp > "+time;
 			cmd = connection.createStatement();
-			data = cmd.executeQuery(sql);
+			data = cmd.executeQuery(sql);*/
 			ArrayList<Integer> fromsql = new ArrayList<Integer>();
-			while (data.next()) {
+			/*while (data.next()) {
 				fromsql.add(data.getInt("groupID"));
-			}
+			}*/
 			
 			// Hent seneste temperatur. Er der flere temperature i et sæt tages gennemsnit af det. Enheder med motion udelukkes. Enheder med aktiv=0 udelukkes.
 			sql = "SELECT AVG(t1.value) as val,gateways.device AS gate,devices.groupID FROM data t1 ";

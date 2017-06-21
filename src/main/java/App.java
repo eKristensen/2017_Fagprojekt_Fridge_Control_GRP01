@@ -24,7 +24,7 @@ private static Connection connection = null;
 		String addgate = null;
 
 		if (args.length >= 1) {
-			System.out.println("Input registred. The gateway " + args[0] + " will be updated.");
+			System.out.println("Input registred. The gateway " + args[1] + " will be " + args[0] + ".");
 			addgate = args[0];
 		} else {
 			System.out.println("No argument, datacollection starting...");
@@ -63,7 +63,7 @@ private static Connection connection = null;
 		statusChannel.basicConsume(statusQueue, true, statusConsumer);
 
 		
-		if (addgate != null) new UpdateGateway(controlChannel,addgate);
+		if (addgate != null) new UpdateGateway(controlChannel,args[1],args[0]);
 
 		if (addgate == null) AlgoritmeTest1.controlFridges(controlChannel);
 		
