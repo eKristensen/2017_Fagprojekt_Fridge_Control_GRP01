@@ -20,6 +20,7 @@ public class UpdateGateway {
 			
 			String json = gson.toJson(cmd);
 			channel.basicPublish("control", "", null, json.getBytes());
+			App.Disconnect();
 		} else if (what.equals("update") || what.equals("add")) {
 			ApiCommand cmd = new ApiCommand("add", gateway);
 			

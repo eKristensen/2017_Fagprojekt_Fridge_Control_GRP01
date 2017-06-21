@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class Listener extends DefaultConsumer {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private static int gatewaycnt = 0;
 	private static String addgate = null;
 
 	public Listener(Channel channel, String addgateinput) {
@@ -40,12 +39,7 @@ public class Listener extends DefaultConsumer {
 				
 				if (addgate != null) {
 					if (gateway.contains(addgate)) {
-						if (gatewaycnt < 1) {
-							gatewaycnt++;
-						}
-						else {
-							App.Disconnect();
-						}
+						App.Disconnect();
 					}
 				}
 				else {
