@@ -5,95 +5,96 @@ import com.rabbitmq.client.*;
 
 public class App {
 
-private static Channel dataChannel = null;
-private static Channel statusChannel = null;
-private static Channel controlChannel = null;
-private static Connection connection = null;
+    private static Channel dataChannel = null;
+    private static Channel statusChannel = null;
+    private static Channel controlChannel = null;
+    private static Connection connection = null;
 
-	public static void main(String[] args) throws Exception {
-		
-		/*
-		System.out.println(Boolean.toString(true));
-		
-		System.out.println(System.currentTimeMillis() / 1000L - 5* 60);
-		
-		Database.getLastTemp();
-		System.exit(0);
-		*/
-		
-		Boolean run = true;
-		String addgate = null;
+    public static void main(String[] args) throws Exception {
 
-		if (args.length >= 1) {
-			System.out.println("Input registred. The gateway " + args[1] + " will be " + args[0] + ".");
-			addgate = args[1];
-			run = false;
-		} else {
-			System.out.println("No argument, datacollection starting...");
-		}
-		
-		Database.GatewayList();
-		
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setUsername("incap");
-		factory.setPassword("ORDZnBMCLH4BRYAAbdi1i3jTVonWozDE");
-		factory.setHost("broker.elektro.dtu.dk");
-		factory.setPort(5000);
-		factory.setVirtualHost("incap");
-		factory.setAutomaticRecoveryEnabled(true);
-		factory.useSslProtocol();
+        /*
+         * System.out.println(Boolean.toString(true));
+         * 
+         * System.out.println(System.currentTimeMillis() / 1000L - 5* 60);
+         * 
+         * Database.getLastTemp(); System.exit(0);
+         */
 
-		connection = factory.newConnection();
-		dataChannel = connection.createChannel();
-		statusChannel = connection.createChannel();
-		controlChannel = connection.createChannel();
+        Boolean run = true;
+        String addgate = null;
 
-		dataChannel.exchangeDeclare("data", "topic", true);
-		statusChannel.exchangeDeclare("status", "topic", true);
-		controlChannel.exchangeDeclare("control", "topic", true);
+        if (args.length >= 1) {
+            System.out.println("Input registred. The gateway " + args[1] + " will be " + args[0] + ".");
+            addgate = args[1];
+            run = false;
+        } else {
+            System.out.println("No argument, datacollection starting...");
+        }
 
-		String dataQueue = dataChannel.queueDeclare().getQueue();
-		String statusQueue = statusChannel.queueDeclare().getQueue();
+        Database.GatewayList();
 
-		dataChannel.queueBind(dataQueue, "data", "#");
-		statusChannel.queueBind(statusQueue, "status", "#");
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setUsername("incap");
+        factory.setPassword("ORDZnBMCLH4BRYAAbdi1i3jTVonWozDE");
+        factory.setHost("broker.elektro.dtu.dk");
+        factory.setPort(5000);
+        factory.setVirtualHost("incap");
+        factory.setAutomaticRecoveryEnabled(true);
+        factory.useSslProtocol();
 
-		Consumer dataConsumer = new Listener(dataChannel, null);
-		Consumer statusConsumer = new Listener(statusChannel, addgate);
+        connection = factory.newConnection();
+        dataChannel = connection.createChannel();
+        statusChannel = connection.createChannel();
+        controlChannel = connection.createChannel();
 
-		if (addgate == null) dataChannel.basicConsume(dataQueue, true, dataConsumer);
-		statusChannel.basicConsume(statusQueue, true, statusConsumer);
+        dataChannel.exchangeDeclare("data", "topic", true);
+        statusChannel.exchangeDeclare("status", "topic", true);
+        controlChannel.exchangeDeclare("control", "topic", true);
 
-		
-		if (!run) new UpdateGateway(controlChannel,args[1],args[0]);
+        String dataQueue = dataChannel.queueDeclare().getQueue();
+        String statusQueue = statusChannel.queueDeclare().getQueue();
 
-		if (run) AlgoritmeTest1.controlFridges(controlChannel);
-		
-		// connection.close();
-	}
-	
-	public static Channel GetChannel(String chan) {
-		if (chan.equals("Control")) {
-			return controlChannel;
-		}
-		else return null;
-	}
-	
-	public static void Disconnect() {
-		try {
-			try {
-				dataChannel.close();
-		        statusChannel.close();
-		        controlChannel.close();
-			} catch (TimeoutException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			connection.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        dataChannel.queueBind(dataQueue, "data", "#");
+        statusChannel.queueBind(statusQueue, "status", "#");
+
+        Consumer dataConsumer = new Listener(dataChannel, null);
+        Consumer statusConsumer = new Listener(statusChannel, addgate);
+
+        if (addgate == null)
+            dataChannel.basicConsume(dataQueue, true, dataConsumer);
+        statusChannel.basicConsume(statusQueue, true, statusConsumer);
+
+        if (!run)
+            new UpdateGateway(controlChannel, args[1], args[0]);
+
+        if (run)
+            AlgoritmeTest1.controlFridges(controlChannel);
+
+        // connection.close();
+    }
+
+    public static Channel GetChannel(String chan) {
+        if (chan.equals("Control")) {
+            return controlChannel;
+        } else
+            return null;
+    }
+
+    public static void Disconnect() {
+        try {
+            try {
+                dataChannel.close();
+                statusChannel.close();
+                controlChannel.close();
+            } catch (TimeoutException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            connection.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
 }

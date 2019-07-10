@@ -13,7 +13,6 @@ public class Command {
     @SerializedName("params")
     private Map<String, String> parameters;
 
-
     public Command() {
         parameters = new HashMap<String, String>();
     }
@@ -24,7 +23,6 @@ public class Command {
         this.gateway = gateway;
         this.device = device;
     }
-
 
     public String getCommand() {
         return command;
@@ -75,10 +73,13 @@ public class Command {
     }
 
     public boolean isValid() {
-        if (command == null || gateway == null || device == null) return false;
+        if (command == null || gateway == null || device == null)
+            return false;
         // slow regex check, can be optimized with a compiled pattern
-        if (!gateway.matches("[0-9A-F]{16}")) return false;
-        if (!device.matches("[0-9A-F]{16}")) return false;
+        if (!gateway.matches("[0-9A-F]{16}"))
+            return false;
+        if (!device.matches("[0-9A-F]{16}"))
+            return false;
         return true;
     }
 
@@ -88,6 +89,7 @@ public class Command {
         for (String key : parameters.keySet()) {
             sb.append(key + ":" + parameters.get(key) + " ");
         }
-        return "Command: " + command + ", Gateway: " + gateway + ", Device: " + device + ", Parameters: " + sb.toString();
+        return "Command: " + command + ", Gateway: " + gateway + ", Device: " + device + ", Parameters: "
+                + sb.toString();
     }
 }

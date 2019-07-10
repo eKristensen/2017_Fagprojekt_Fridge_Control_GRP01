@@ -26,7 +26,6 @@ public class ApiCommand {
         this.devices = devices;
     }
 
-
     public String getCommand() {
         return command;
     }
@@ -68,8 +67,10 @@ public class ApiCommand {
     }
 
     public boolean isValid() {
-        if (command == null || gateway == null) return false;
-        if (!gateway.matches("[0-9A-F]{16}")) return false;
+        if (command == null || gateway == null)
+            return false;
+        if (!gateway.matches("[0-9A-F]{16}"))
+            return false;
         return true;
     }
 
@@ -95,7 +96,8 @@ public class ApiCommand {
         private String type;
         private String device;
 
-        public DeviceTypePair() { }
+        public DeviceTypePair() {
+        }
 
         public DeviceTypePair(String type, String device) {
             this.type = type;
@@ -119,17 +121,20 @@ public class ApiCommand {
         }
 
         public boolean isValid() {
-            if (device == null || type == null) return false;
+            if (device == null || type == null)
+                return false;
             // slow regex check, can be optimized with a compiled pattern
-            if (!device.matches("[0-9A-F]{16}")) return false;
-            if (!type.matches("(relay|sensor|indicator)")) return false;
+            if (!device.matches("[0-9A-F]{16}"))
+                return false;
+            if (!type.matches("(relay|sensor|indicator)"))
+                return false;
             return true;
         }
     }
 
     public static class Rules {
-        private boolean read;   // allow publishing of data from this unit
-        private boolean write;  // allow controlling of devices in this unit
+        private boolean read; // allow publishing of data from this unit
+        private boolean write; // allow controlling of devices in this unit
         private boolean config; // allow updating of this unit
 
         public Rules(boolean read, boolean write, boolean config) {
